@@ -25,38 +25,50 @@
   <!-- ============ THE EMBED ============ -->
   <iframe
     id="zr-form"
-    src="./index.html?city=paris&country=france&channel=qrcode"
     title="Sign up — Zielinski & Rozen"
     loading="lazy"></iframe>
   <!-- =================================== -->
 
-  <p class="note">Once deployed, replace the local <code>./index.html</code> src with the live URL:
-     <code>https://yairixstudio.github.io/zr-klaviyo-form/?city=paris&amp;country=france&amp;channel=qrcode</code></p>
+  <p class="note">The iframe <code>src</code> is built dynamically below: it forwards
+     <strong>this page's</strong> URL params into the form. Try adding
+     <code>?city=paris&amp;country=israel&amp;channel=qrcode</code> to this page's URL and reload —
+     the form will reflect it.</p>
 
-  <h1 style="margin-top:40px">Paste-ready snippet</h1>
-  <pre>&lt;iframe
-  id="zr-form"
-  src="https://yairixstudio.github.io/zr-klaviyo-form/?city=paris&amp;country=france&amp;channel=qrcode"
+  <h1 style="margin-top:40px">Paste-ready snippet (forwards the page's URL params)</h1>
+  <pre>&lt;iframe id="zr-form"
   style="width:100%;max-width:680px;height:560px;border:0;"
-  title="Sign up — Zielinski &amp; Rozen"
-  loading="lazy"&gt;&lt;/iframe&gt;
+  title="Sign up — Zielinski &amp; Rozen" loading="lazy"&gt;&lt;/iframe&gt;
 
 &lt;script&gt;
-  window.addEventListener('message', function (e) {
-    if (e.data &amp;&amp; e.data.type === 'zr-klaviyo-form:height') {
-      document.getElementById('zr-form').style.height = e.data.height + 'px';
-    }
-  });
+  (function () {
+    var base = 'https://yairixstudio.github.io/zr-klaviyo-form/';
+    var iframe = document.getElementById('zr-form');
+    // Forward THIS page's URL params (?city=&country=&channel=...) into the form.
+    iframe.src = base + window.location.search;
+    // Auto-resize the iframe to the form's height.
+    window.addEventListener('message', function (e) {
+      if (e.data &amp;&amp; e.data.type === 'zr-klaviyo-form:height') {
+        iframe.style.height = e.data.height + 'px';
+      }
+    });
+  })();
 &lt;/script&gt;</pre>
 </div>
 
 <script>
-  // Auto-resize the iframe to match the form's content height.
-  window.addEventListener('message', function (e) {
-    if (e.data && e.data.type === 'zr-klaviyo-form:height') {
-      document.getElementById('zr-form').style.height = e.data.height + 'px';
-    }
-  });
+  (function () {
+    var iframe = document.getElementById('zr-form');
+    // Local demo uses ./index.html; the snippet above uses the live URL.
+    var base = './index.html';
+    // Forward this page's URL params; fall back to a demo query if none present.
+    iframe.src = base + (window.location.search || '?city=paris&country=israel&channel=qrcode');
+    // Auto-resize the iframe to match the form's content height.
+    window.addEventListener('message', function (e) {
+      if (e.data && e.data.type === 'zr-klaviyo-form:height') {
+        iframe.style.height = e.data.height + 'px';
+      }
+    });
+  })();
 </script>
 </body>
 </html>

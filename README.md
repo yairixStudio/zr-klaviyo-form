@@ -32,26 +32,45 @@ Example: `…/?city=paris&country=france&channel=qrcode`
 
 ## Embedding
 
+A cross-origin iframe **cannot read the host page's URL** (browser security), so to forward
+the host page's params (`?city=&country=&channel=…`) into the form, the host sets the iframe
+`src` with one small script. This snippet also auto-resizes the iframe via `postMessage`:
+
 ```html
-<iframe
-  src="https://yairixstudio.github.io/zr-klaviyo-form/?city=paris&country=france&channel=qrcode"
+<iframe id="zr-form"
   style="width:100%;max-width:680px;height:560px;border:0;"
-  title="Sign up — Zielinski & Rozen"
-  loading="lazy"></iframe>
-```
+  title="Sign up — Zielinski & Rozen" loading="lazy"></iframe>
 
-### Optional auto-resize
-
-The page posts its height to the parent via `postMessage`. To auto-size the iframe:
-
-```html
 <script>
-  window.addEventListener('message', function (e) {
-    if (e.data && e.data.type === 'zr-klaviyo-form:height') {
-      document.getElementById('zr-form').style.height = e.data.height + 'px';
-    }
-  });
+  (function () {
+    var base = 'https://yairixstudio.github.io/zr-klaviyo-form/';
+    var iframe = document.getElementById('zr-form');
+    iframe.src = base + window.location.search;        // forward the page's URL params
+    window.addEventListener('message', function (e) {
+      if (e.data && e.data.type === 'zr-klaviyo-form:height') {
+        iframe.style.height = e.data.height + 'px';     // auto-resize
+      }
+    });
+  })();
 </script>
 ```
 
-(Give the iframe `id="zr-form"`.) See `embed-example.html` for a full working demo.
+**Shopify:** paste this into a **Custom Liquid** block (not the rich-text editor, which strips
+`<script>` and iframes). Unknown params like `preview_key` are ignored by the form.
+
+### Static alternative
+
+If the values are fixed per placement (e.g. a printed QR for one store), skip the script and
+hardcode them in `src`:
+
+```html
+<iframe src="https://yairixstudio.github.io/zr-klaviyo-form/?city=paris&country=israel&channel=qrcode"
+  style="width:100%;max-width:680px;height:560px;border:0;" title="Sign up"></iframe>
+```
+
+### No params at all
+
+If neither the URL nor the host supplies `city`/`country`, the form infers them from the
+visitor's IP (client-side, `ipapi.co` → `ipwho.is`, no key). URL params and user input always win.
+
+See `embed-example.html` for a full working demo.
