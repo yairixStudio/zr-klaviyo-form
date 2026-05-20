@@ -1,44 +1,56 @@
 # zr-klaviyo-form
 
-A standalone, minimalist signup form for **Zielinski & Rozen** that submits directly to
+A standalone, multilingual newsletter signup form for **Zielinski & Rozen** that submits directly to
 Klaviyo's [Client Subscriptions API](https://developers.klaviyo.com/en/reference/create_client_subscription).
-Built as a single static `index.html` (no build step, no dependencies) and designed to be
-embedded as an `<iframe>` on any website.
+No build step, no dependencies — static HTML hosted on GitHub Pages. It can be shared as a link,
+printed as a QR code, or embedded as an `<iframe>` on any website.
 
 **Live:** https://yairixstudio.github.io/zr-klaviyo-form/
 
+## Pages
+
+| Page | Path | Purpose |
+|---|---|---|
+| **Form** | `/` | The live signup form visitors fill in |
+| **QR generator** | `/generate/` | Build a campaign link and download a QR code (SVG/PNG) for print, ads, in-store |
+| **Guide** | `/guide/` | How it works, URL parameters, and ready-to-paste iframe embed code |
+
 ## How it works
 
-- POSTs to `https://a.klaviyo.com/client/subscriptions/?company_id=RNG3Ym` (list `XfZuXJ`).
-- Auth is the public `company_id` only — no secret key, safe to ship client-side.
-- The endpoint is CORS-enabled, so it works from any origin, including inside an iframe.
+- POSTs to `https://a.klaviyo.com/client/subscriptions/`. Auth is the public company ID only
+  (no secret key), and the endpoint is CORS-enabled, so it works from any origin including iframes.
+- Consent links to the GDPR privacy policy on the main site.
+
+## Languages
+
+11 languages with a switcher at the bottom of the form: English, Arabic, Chinese, French, German,
+Hebrew, Hindi, Italian, Portuguese, Russian, Spanish. Country names localize automatically via
+`Intl.DisplayNames`. The starting language is auto-selected (`?lang=` → saved → browser → country →
+IP/timezone) and falls back to English.
 
 ## URL parameters
 
-The form reads these from **its own** URL (the iframe `src`), pre-fills fields, and attaches
-them as profile properties:
-
 | Param | Use |
 |---|---|
-| `city` | Pre-fills the City field |
-| `country` | Pre-fills Country (accepts ISO code `FR` or name `France`) |
-| `channel` / `source` | Stored as `channel` property (default `qr-code`) |
-| `store_id` / `store` | Stored as `store_id` |
-| `qr_id` / `qr` / `code` | Stored as `qr_id` |
+| `city` | Prefills the City field |
+| `country` | Prefills Country (ISO code `FR` or name `France`) |
+| `channel` / `source` | Marketing channel (default `qr-code`) |
+| `store_id` / `store` | Originating store / location |
+| `qr_id` / `qr` / `code` | Specific QR / campaign code |
+| `lang` | Force a starting language (`fr`, `es`, `ar`, …) |
 | `utm_*` | Stored as-is |
-| `debug=1` | Shows the debug panel with the outgoing payload |
+| `debug=1` | Shows the outgoing payload |
 
-Example: `…/?city=paris&country=france&channel=qrcode`
+Example: `…/?store_id=paris-marais&city=Paris&country=FR&channel=qrcode`
 
 ## Embedding
 
-A cross-origin iframe **cannot read the host page's URL** (browser security), so to forward
-the host page's params (`?city=&country=&channel=…`) into the form, the host sets the iframe
-`src` with one small script. This snippet also auto-resizes the iframe via `postMessage`:
+Get the snippet from `/guide/`, or use the dynamic version that forwards the host page's params and
+auto-resizes the iframe:
 
 ```html
 <iframe id="zr-form"
-  style="width:100%;max-width:680px;height:560px;border:0;"
+  style="width:100%;max-width:640px;height:560px;border:0;display:block;margin:0 auto;"
   title="Sign up — Zielinski & Rozen" loading="lazy"></iframe>
 
 <script>
@@ -55,22 +67,4 @@ the host page's params (`?city=&country=&channel=…`) into the form, the host s
 </script>
 ```
 
-**Shopify:** paste this into a **Custom Liquid** block (not the rich-text editor, which strips
-`<script>` and iframes). Unknown params like `preview_key` are ignored by the form.
-
-### Static alternative
-
-If the values are fixed per placement (e.g. a printed QR for one store), skip the script and
-hardcode them in `src`:
-
-```html
-<iframe src="https://yairixstudio.github.io/zr-klaviyo-form/?city=paris&country=israel&channel=qrcode"
-  style="width:100%;max-width:680px;height:560px;border:0;" title="Sign up"></iframe>
-```
-
-### No params at all
-
-If neither the URL nor the host supplies `city`/`country`, the form infers them from the
-visitor's IP (client-side, `ipapi.co` → `ipwho.is`, no key). URL params and user input always win.
-
-See `embed-example.html` for a full working demo.
+**Shopify:** paste into a *Custom Liquid* block (the rich-text editor strips `<script>` and iframes).

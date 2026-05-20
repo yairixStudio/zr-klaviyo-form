@@ -219,7 +219,7 @@
   var langSource = 'default';
 
   // ---------- i18n ----------
-  var SUPPORTED = ['en','he','ar','fr','es','de','it','pt','ru','hi','zh'];
+  var SUPPORTED = ['en','ar','zh','fr','de','he','hi','it','pt','ru','es'];
   var LANG_NAMES = {
     en:'English', he:'עברית', ar:'العربية', fr:'Français', es:'Español',
     de:'Deutsch', it:'Italiano', pt:'Português', ru:'Русский', hi:'हिन्दी', zh:'中文'
@@ -244,8 +244,6 @@
 
   // ---------- countries (ISO-2 codes; English names for the submitted value + fallback) ----------
   var COUNTRY_EN = {
-    IL:'Israel', AE:'United Arab Emirates', SA:'Saudi Arabia', QA:'Qatar', KW:'Kuwait', BH:'Bahrain', OM:'Oman',
-    JO:'Jordan', LB:'Lebanon', EG:'Egypt', TR:'Turkey', MA:'Morocco', TN:'Tunisia', DZ:'Algeria',
     AT:'Austria', BE:'Belgium', BG:'Bulgaria', CH:'Switzerland', CY:'Cyprus', CZ:'Czechia', DE:'Germany',
     DK:'Denmark', EE:'Estonia', ES:'Spain', FI:'Finland', FR:'France', GB:'United Kingdom', GR:'Greece',
     HR:'Croatia', HU:'Hungary', IE:'Ireland', IS:'Iceland', IT:'Italy', LT:'Lithuania', LU:'Luxembourg',
@@ -253,22 +251,24 @@
     RS:'Serbia', RU:'Russia', SE:'Sweden', SI:'Slovenia', SK:'Slovakia', UA:'Ukraine',
     US:'United States', CA:'Canada', MX:'Mexico', BR:'Brazil', AR:'Argentina', CL:'Chile', CO:'Colombia', PE:'Peru',
     IN:'India', CN:'China', HK:'Hong Kong', TW:'Taiwan', JP:'Japan', KR:'South Korea', SG:'Singapore',
-    AU:'Australia', NZ:'New Zealand', TH:'Thailand'
+    AU:'Australia', NZ:'New Zealand', TH:'Thailand',
+    AE:'United Arab Emirates', SA:'Saudi Arabia', QA:'Qatar', KW:'Kuwait', BH:'Bahrain', OM:'Oman',
+    JO:'Jordan', LB:'Lebanon', EG:'Egypt', TR:'Turkey', MA:'Morocco', TN:'Tunisia', DZ:'Algeria', IL:'Israel'
   };
   var COUNTRY_CODES = Object.keys(COUNTRY_EN);
 
   // country -> default UI language
   var COUNTRY_LANG = {
-    IL:'he',
-    AE:'ar', SA:'ar', QA:'ar', KW:'ar', BH:'ar', OM:'ar', JO:'ar', LB:'ar', EG:'ar', MA:'ar', TN:'ar', DZ:'ar',
     FR:'fr',
     ES:'es', MX:'es', AR:'es', CL:'es', CO:'es', PE:'es',
     BR:'pt', PT:'pt',
+    DE:'de', AT:'de',
+    IT:'it',
     RU:'ru',
     IN:'hi',
     CN:'zh', HK:'zh', TW:'zh',
-    DE:'de', AT:'de',
-    IT:'it'
+    AE:'ar', SA:'ar', QA:'ar', KW:'ar', BH:'ar', OM:'ar', JO:'ar', LB:'ar', EG:'ar', MA:'ar', TN:'ar', DZ:'ar',
+    IL:'he'
   };
 
   function qp(name, sp){ return (sp.get(name) || '').trim(); }
@@ -474,16 +474,17 @@
   ];
   // Offline fallback by timezone (when every geo provider is blocked/rate-limited).
   var TZ_MAP = {
-    'Asia/Jerusalem':['he','IL'],'Asia/Tel_Aviv':['he','IL'],
+    'Europe/Paris':['fr','FR'],'Europe/Madrid':['es','ES'],'Europe/Berlin':['de','DE'],'Europe/Vienna':['de','AT'],
+    'Europe/Zurich':['de','CH'],'Europe/Rome':['it','IT'],'Europe/Lisbon':['pt','PT'],'Europe/Moscow':['ru','RU'],
+    'Europe/London':['en','GB'],
+    'America/New_York':['en','US'],'America/Chicago':['en','US'],'America/Denver':['en','US'],'America/Los_Angeles':['en','US'],
+    'America/Sao_Paulo':['pt','BR'],
+    'Asia/Kolkata':['hi','IN'],'Asia/Calcutta':['hi','IN'],
+    'Asia/Shanghai':['zh','CN'],'Asia/Hong_Kong':['zh','HK'],'Asia/Taipei':['zh','TW'],
     'Asia/Dubai':['ar','AE'],'Asia/Riyadh':['ar','SA'],'Asia/Qatar':['ar','QA'],'Asia/Kuwait':['ar','KW'],
     'Asia/Bahrain':['ar','BH'],'Asia/Muscat':['ar','OM'],'Asia/Amman':['ar','JO'],'Asia/Beirut':['ar','LB'],
     'Africa/Cairo':['ar','EG'],'Africa/Casablanca':['ar','MA'],
-    'Europe/Paris':['fr','FR'],'Europe/Madrid':['es','ES'],'Europe/Berlin':['de','DE'],'Europe/Vienna':['de','AT'],
-    'Europe/Zurich':['de','CH'],'Europe/Rome':['it','IT'],'America/Sao_Paulo':['pt','BR'],'Europe/Lisbon':['pt','PT'],
-    'Europe/Moscow':['ru','RU'],'Asia/Kolkata':['hi','IN'],'Asia/Calcutta':['hi','IN'],
-    'Asia/Shanghai':['zh','CN'],'Asia/Hong_Kong':['zh','HK'],'Asia/Taipei':['zh','TW'],
-    'America/New_York':['en','US'],'America/Chicago':['en','US'],'America/Denver':['en','US'],'America/Los_Angeles':['en','US'],
-    'Europe/London':['en','GB']
+    'Asia/Jerusalem':['he','IL'],'Asia/Tel_Aviv':['he','IL']
   };
   function geoTzFallback(){
     try{

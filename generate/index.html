@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>QR Generator — Zielinski & Rozen Signup</title>
+<style>
+  :root{
+    --cream:#F4F0E8; --off:#1B1B1B; --soft:#6B7280; --line:rgba(27,27,27,.22);
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    --serif:Georgia,"Times New Roman",serif; --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--cream);color:var(--off);font-family:var(--sans)}
+  body{padding:34px 16px 60px;line-height:1.5}
+  .wrap{max-width:920px;margin:0 auto}
+  nav{display:flex;gap:18px;justify-content:center;margin-bottom:30px;font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+  nav a{color:var(--soft);text-decoration:none;padding-bottom:3px;border-bottom:1px solid transparent}
+  nav a:hover{color:var(--off)}
+  nav a.active{color:var(--off);border-color:var(--off)}
+  h1{font-family:var(--serif);font-weight:400;font-size:28px;letter-spacing:.01em;text-align:center}
+  .lead{font-size:15px;color:var(--soft);text-align:center;max-width:60ch;margin:8px auto 30px}
+  h2{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);margin-bottom:12px}
+
+  .grid{display:grid;grid-template-columns:1fr 320px;gap:30px;align-items:start}
+  @media (max-width:760px){ .grid{grid-template-columns:1fr} }
+
+  .fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .fields label{display:flex;flex-direction:column;gap:5px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--soft)}
+  .fields .full{grid-column:1 / -1}
+  input[type=text]{height:44px;border:1px solid var(--line);background:#fff;color:var(--off);padding:0 12px;font-size:15px;font-family:var(--sans);border-radius:0;width:100%}
+  input[type=text]:focus{outline:none;border-color:var(--off)}
+
+  .extra{margin-top:22px}
+  .extra-rows{display:flex;flex-direction:column;gap:10px}
+  .extra-row{display:grid;grid-template-columns:1fr 1fr 40px;gap:10px;align-items:center}
+  .extra-row .rm{height:40px;border:1px solid var(--line);background:#fff;color:var(--soft);cursor:pointer;font-size:18px;line-height:1}
+  .add-btn{margin-top:12px;border:1px dashed var(--line);background:transparent;color:var(--off);
+    font-family:var(--sans);font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:10px 14px;cursor:pointer;width:100%}
+
+  .panel{position:sticky;top:20px;display:flex;flex-direction:column;gap:14px}
+  .qr-card{border:1px solid var(--line);background:#fff;padding:20px;display:flex;align-items:center;justify-content:center}
+  .qr-card svg{width:100%;height:auto;max-width:260px;display:block}
+  .btns{display:flex;flex-direction:column;gap:8px}
+  button.act{border-radius:0;height:44px;border:1px solid var(--off);background:var(--off);color:#fff;
+    font-family:var(--sans);font-size:12px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+  button.act.ghost{background:transparent;color:var(--off)}
+  button.act.done{background:#0B6B3A;border-color:#0B6B3A;color:#fff}
+  a.act{display:flex;align-items:center;justify-content:center;text-decoration:none}
+
+  .linkbox{margin-top:26px}
+  .linkrow{display:flex;gap:0;border:1px solid var(--line);background:#fff}
+  .linkrow input{flex:1;height:46px;border:0;padding:0 12px;font-family:var(--mono);font-size:12.5px;color:var(--off);background:transparent}
+  .linkrow input:focus{outline:none}
+  .linkrow button{border:0;border-left:1px solid var(--line);background:var(--cream);color:var(--off);
+    font-family:var(--sans);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:0 16px;cursor:pointer}
+  .linkrow button.done{background:#0B6B3A;color:#fff}
+  .hint{font-size:12px;color:var(--soft);margin-top:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a href="../">Form</a>
+    <a href="./" class="active">QR Generator</a>
+    <a href="../guide/">Guide</a>
+  </nav>
+
+  <h1>QR Code Generator</h1>
+  <p class="lead">Build a campaign link to the signup form, then download a QR code for print, ads, or in-store display.</p>
+
+  <div class="grid">
+    <div>
+      <h2>Campaign details</h2>
+      <div class="fields">
+        <label>Store ID<input id="f-store_id" type="text" placeholder="e.g. paris-marais"></label>
+        <label>Channel<input id="f-channel" type="text" placeholder="e.g. qrcode" value="qrcode"></label>
+        <label>City<input id="f-city" type="text" placeholder="e.g. Paris"></label>
+        <label>Country<input id="f-country" type="text" placeholder="ISO code or name, e.g. FR"></label>
+        <label class="full">Language (optional, otherwise auto-detected)<input id="f-lang" type="text" placeholder="e.g. fr — leave blank for auto"></label>
+      </div>
+
+      <div class="extra">
+        <h2>Additional parameters (optional)</h2>
+        <div class="extra-rows" id="extra-rows"></div>
+        <button class="add-btn" id="add-row" type="button">+ Add parameter</button>
+      </div>
+
+      <div class="linkbox">
+        <h2>Form link</h2>
+        <div class="linkrow">
+          <input id="form-url" type="text" readonly>
+          <button id="copy-url" type="button">Copy</button>
+        </div>
+        <p class="hint">This is the URL the QR code points to. Scanning it opens the signup form with these parameters prefilled.</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>QR code</h2>
+      <div class="qr-card" id="qr"></div>
+      <div class="btns">
+        <button class="act" id="dl-svg" type="button">Download SVG</button>
+        <button class="act ghost" id="dl-png" type="button">Download PNG</button>
+        <a class="act ghost" id="open-form" href="#" target="_blank" rel="noopener" style="height:44px;border:1px solid var(--off)">Open form ↗</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../lib/qrcode-generator.js"></script>
+<script>
+(function(){
+  'use strict';
+  var BASE = 'https://yairixstudio.github.io/zr-klaviyo-form/';
+  var BASE_FIELDS = ['store_id','channel','city','country','lang'];
+  var $ = function(id){return document.getElementById(id);};
+
+  // Prefill from this page's own URL.
+  var sp = new URLSearchParams(location.search);
+  BASE_FIELDS.forEach(function(k){ var v=sp.get(k); if(v && $('f-'+k)) $('f-'+k).value=v; });
+
+  // ---- additional param rows ----
+  function addRow(k, v){
+    var row=document.createElement('div'); row.className='extra-row';
+    row.innerHTML='<input type="text" class="ek" placeholder="parameter"><input type="text" class="ev" placeholder="value"><button type="button" class="rm" title="Remove">×</button>';
+    $('extra-rows').appendChild(row);
+    if(k!=null) row.querySelector('.ek').value=k;
+    if(v!=null) row.querySelector('.ev').value=v;
+    row.querySelector('.ek').addEventListener('input', refresh);
+    row.querySelector('.ev').addEventListener('input', refresh);
+    row.querySelector('.rm').addEventListener('click', function(){ row.remove(); refresh(); });
+  }
+  // Seed extra rows from any non-base params on this page's URL.
+  sp.forEach(function(val,key){ if(BASE_FIELDS.indexOf(key)===-1) addRow(key,val); });
+
+  function buildQuery(){
+    var parts=[];
+    BASE_FIELDS.forEach(function(k){
+      var v=$('f-'+k).value.trim();
+      if(v) parts.push(encodeURIComponent(k)+'='+encodeURIComponent(v));
+    });
+    document.querySelectorAll('.extra-row').forEach(function(row){
+      var k=row.querySelector('.ek').value.trim(), v=row.querySelector('.ev').value.trim();
+      if(k) parts.push(encodeURIComponent(k)+'='+encodeURIComponent(v));
+    });
+    return parts.length ? ('?'+parts.join('&')) : '';
+  }
+
+  function formUrl(){ return BASE + buildQuery(); }
+
+  function renderQR(text){
+    var qr = qrcode(0, 'M');           // auto type, medium error correction
+    qr.addData(text); qr.make();
+    var svg = qr.createSvgTag({ cellSize:8, margin:4 });
+    $('qr').innerHTML = svg;
+    var el=$('qr').querySelector('svg');
+    if(el){ el.removeAttribute('width'); el.removeAttribute('height'); el.setAttribute('shape-rendering','crispEdges'); }
+    return el;
+  }
+
+  function refresh(){
+    var url=formUrl();
+    $('form-url').value=url;
+    $('open-form').href=url;
+    renderQR(url);
+  }
+
+  BASE_FIELDS.forEach(function(k){ $('f-'+k).addEventListener('input', refresh); });
+  $('add-row').addEventListener('click', function(){ addRow(); });
+
+  // ---- copy ----
+  function flash(btn){ var o=btn.textContent; btn.textContent='Copied'; btn.classList.add('done');
+    setTimeout(function(){ btn.textContent=o; btn.classList.remove('done'); },1500); }
+  $('copy-url').addEventListener('click', function(){
+    var t=$('form-url').value, b=$('copy-url');
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(t).then(function(){flash(b);}); }
+    else { $('form-url').select(); try{document.execCommand('copy');}catch(e){} flash(b); }
+  });
+
+  // ---- downloads ----
+  function slug(){
+    var s = ($('f-store_id').value || $('f-city').value || 'signup').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+    return 'qr-' + (s||'signup');
+  }
+  function download(blob, name){
+    var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(a.href); }, 4000);
+  }
+  $('dl-svg').addEventListener('click', function(){
+    var el=$('qr').querySelector('svg'); if(!el) return;
+    var xml='<?xml version="1.0" encoding="UTF-8"?>\n'+new XMLSerializer().serializeToString(el);
+    download(new Blob([xml],{type:'image/svg+xml'}), slug()+'.svg');
+  });
+  $('dl-png').addEventListener('click', function(){
+    var el=$('qr').querySelector('svg'); if(!el) return;
+    var clone=el.cloneNode(true); var SZ=1024; clone.setAttribute('width',SZ); clone.setAttribute('height',SZ);
+    var xml=new XMLSerializer().serializeToString(clone);
+    var url='data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(xml)));
+    var img=new Image();
+    img.onload=function(){
+      var c=document.createElement('canvas'); c.width=SZ; c.height=SZ;
+      var ctx=c.getContext('2d'); ctx.fillStyle='#fff'; ctx.fillRect(0,0,SZ,SZ);
+      ctx.imageSmoothingEnabled=false; ctx.drawImage(img,0,0,SZ,SZ);
+      c.toBlob(function(blob){ if(blob) download(blob, slug()+'.png'); }, 'image/png');
+    };
+    img.src=url;
+  });
+
+  refresh();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Guide — Zielinski & Rozen Signup Form</title>
+<style>
+  :root{
+    --cream:#F4F0E8; --off:#1B1B1B; --soft:#6B7280; --line:rgba(27,27,27,.22);
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    --serif:Georgia,"Times New Roman",serif; --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--cream);color:var(--off);font-family:var(--sans)}
+  body{padding:34px 16px 70px;line-height:1.6}
+  .wrap{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:34px}
+  nav{display:flex;gap:18px;justify-content:center;font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+  nav a{color:var(--soft);text-decoration:none;padding-bottom:3px;border-bottom:1px solid transparent}
+  nav a:hover{color:var(--off)}
+  nav a.active{color:var(--off);border-color:var(--off)}
+  h1{font-family:var(--serif);font-weight:400;font-size:30px;letter-spacing:.01em}
+  h2{font-family:var(--serif);font-weight:400;font-size:21px;margin-bottom:4px}
+  h3{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);margin-bottom:10px}
+  p{font-size:15px}
+  .lead{font-size:16px;color:var(--soft)}
+  section{display:flex;flex-direction:column;gap:12px}
+  ul{padding-inline-start:20px;display:flex;flex-direction:column;gap:6px;font-size:14.5px}
+  a.inline{color:inherit}
+  code{font-family:var(--mono);font-size:13px;background:#fff;border:1px solid var(--line);padding:1px 5px}
+
+  table{border-collapse:collapse;width:100%;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:start;vertical-align:top}
+  th{background:#fff;font-weight:600;letter-spacing:.04em}
+  td code{border:0;background:transparent;padding:0}
+
+  .card{border:1px solid var(--line);background:#fff}
+  .card .bar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--cream)}
+  .card .bar span{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft)}
+  .copy-btn{font-family:var(--sans);font-size:11px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--off);background:var(--off);color:#fff;padding:7px 14px;cursor:pointer}
+  .copy-btn.done{background:#0B6B3A;border-color:#0B6B3A}
+  pre{margin:0;padding:16px;font-family:var(--mono);font-size:12px;line-height:1.55;white-space:pre-wrap;word-break:break-word;overflow:auto}
+
+  .params{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:6px}
+  .params label{display:flex;flex-direction:column;gap:5px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--soft)}
+  .params input{height:42px;border:1px solid var(--line);background:#fff;color:var(--off);padding:0 11px;font-size:15px;font-family:var(--sans)}
+  .params input:focus{outline:none;border-color:var(--off)}
+  .preview-frame{width:100%;max-width:640px;border:1px dashed var(--line);display:block}
+  .note{font-size:13px;color:var(--soft)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a href="../">Form</a>
+    <a href="../generate/">QR Generator</a>
+    <a href="./" class="active">Guide</a>
+  </nav>
+
+  <section>
+    <h1>Signup Form — Guide</h1>
+    <p class="lead">A standalone, multilingual newsletter signup form for Zielinski &amp; Rozen.
+       It submits directly to Klaviyo and can be shared as a link, printed as a QR code, or embedded
+       on any website as an <code>&lt;iframe&gt;</code>.</p>
+  </section>
+
+  <section>
+    <h2>The three tools</h2>
+    <ul>
+      <li><strong><a class="inline" href="../">The form</a></strong> — the live signup form. This is what visitors fill in.</li>
+      <li><strong><a class="inline" href="../generate/">QR generator</a></strong> — build a campaign link and download a QR code for print, ads, or in-store.</li>
+      <li><strong>This guide</strong> — how it works, URL parameters, and ready-to-paste embed code.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>How submission works</h2>
+    <p>The form posts directly to Klaviyo's Client Subscriptions API. Authentication is a public
+       company ID only (no secret key), and the endpoint is CORS-enabled — so the form works from any
+       origin, including inside an iframe on a third-party site. Consent links to the
+       <a class="inline" href="https://zielinskiandrozen.com/pages/gdpr-privacy-policy" target="_blank" rel="noopener">Privacy Policy</a>.</p>
+  </section>
+
+  <section>
+    <h2>Languages</h2>
+    <p>The interface is available in 11 languages — English, Arabic, Chinese, French, German, Hebrew,
+       Hindi, Italian, Portuguese, Russian, and Spanish — with a switcher at the bottom of the form.
+       The starting language is chosen automatically: <code>?lang=</code> in the URL, then a saved choice,
+       then the browser language, then the visitor's country, then their IP/timezone — falling back to English.</p>
+  </section>
+
+  <section>
+    <h2>URL parameters</h2>
+    <p>Any of these can be added to the form URL (or the iframe <code>src</code>). They prefill fields and
+       attach as profile properties.</p>
+    <table>
+      <tr><th>Parameter</th><th>Purpose</th></tr>
+      <tr><td><code>city</code></td><td>Prefills the City field</td></tr>
+      <tr><td><code>country</code></td><td>Prefills Country — ISO code (<code>FR</code>) or name (<code>France</code>)</td></tr>
+      <tr><td><code>channel</code> / <code>source</code></td><td>Marketing channel (default <code>qr-code</code>)</td></tr>
+      <tr><td><code>store_id</code> / <code>store</code></td><td>Originating store / location</td></tr>
+      <tr><td><code>qr_id</code> / <code>qr</code> / <code>code</code></td><td>Specific QR / campaign code</td></tr>
+      <tr><td><code>lang</code></td><td>Force a starting language, e.g. <code>fr</code>, <code>es</code>, <code>ar</code></td></tr>
+      <tr><td><code>utm_*</code></td><td>Standard UTM tags, stored as-is</td></tr>
+      <tr><td><code>debug=1</code></td><td>Shows the outgoing payload (for testing)</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Embed as an iframe</h2>
+    <p>A cross-origin iframe cannot read the host page's URL, so to forward the host page's parameters
+       into the form, the host sets the iframe <code>src</code> with one small script. This also auto-resizes
+       the iframe to the form's height.</p>
+
+    <h3>Try it — fill defaults to generate the code</h3>
+    <div class="params">
+      <label>Store ID<input id="p-store" type="text" placeholder="paris-marais"></label>
+      <label>City<input id="p-city" type="text" placeholder="Paris"></label>
+      <label>Country<input id="p-country" type="text" placeholder="FR"></label>
+      <label>Channel<input id="p-channel" type="text" placeholder="qrcode"></label>
+      <label>Language<input id="p-lang" type="text" placeholder="(auto)"></label>
+    </div>
+
+    <div class="card">
+      <div class="bar"><span>Snippet A — forwards the page's URL params (recommended)</span>
+        <button class="copy-btn" data-target="code-dynamic">Copy</button></div>
+      <pre id="code-dynamic"></pre>
+    </div>
+
+    <div class="card">
+      <div class="bar"><span>Snippet B — fixed values baked in</span>
+        <button class="copy-btn" data-target="code-static">Copy</button></div>
+      <pre id="code-static"></pre>
+    </div>
+
+    <p class="note"><strong>Shopify:</strong> paste into a <em>Custom Liquid</em> block (not the rich-text editor,
+       which strips <code>&lt;script&gt;</code> and iframes). Unknown params (like Shopify's <code>preview_key</code>)
+       are ignored by the form, so forwarding the whole query string is safe.</p>
+
+    <h3>Live preview</h3>
+    <iframe id="preview" class="preview-frame" title="Signup form preview" loading="lazy"></iframe>
+  </section>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  var BASE = 'https://yairixstudio.github.io/zr-klaviyo-form/';
+  var FIELDS = [['store_id','p-store'],['city','p-city'],['country','p-country'],['channel','p-channel'],['lang','p-lang']];
+  var $ = function(id){return document.getElementById(id);};
+
+  var sp = new URLSearchParams(location.search);
+  FIELDS.forEach(function(f){ var v=sp.get(f[0]); if(v) $(f[1]).value=v; });
+
+  function buildQuery(){
+    var parts=[];
+    FIELDS.forEach(function(f){ var v=$(f[1]).value.trim(); if(v) parts.push(encodeURIComponent(f[0])+'='+encodeURIComponent(v)); });
+    return parts.length ? ('?'+parts.join('&')) : '';
+  }
+
+  function dynamicSnippet(){
+    return ''+
+'<iframe id="zr-form"\n'+
+'  style="width:100%;max-width:640px;height:560px;border:0;display:block;margin:0 auto;"\n'+
+'  title="Sign up — Zielinski & Rozen" loading="lazy"></iframe>\n'+
+'\n'+
+'<script>\n'+
+'  (function () {\n'+
+"    var base = '"+BASE+"';\n"+
+"    var iframe = document.getElementById('zr-form');\n"+
+'    iframe.src = base + window.location.search;   // forward the page’s URL params\n'+
+"    window.addEventListener('message', function (e) {\n"+
+"      if (e.data && e.data.type === 'zr-klaviyo-form:height') {\n"+
+"        iframe.style.height = e.data.height + 'px';   // auto-resize\n"+
+'      }\n'+
+'    });\n'+
+'  })();\n'+
+'<\/script>';
+  }
+  function staticSnippet(){
+    var q=buildQuery();
+    return ''+
+'<iframe\n'+
+'  src="'+BASE+q+'"\n'+
+'  style="width:100%;max-width:640px;height:560px;border:0;display:block;margin:0 auto;"\n'+
+'  title="Sign up — Zielinski & Rozen" loading="lazy"></iframe>';
+  }
+
+  function refresh(){
+    $('code-dynamic').textContent = dynamicSnippet();
+    $('code-static').textContent  = staticSnippet();
+    var src = BASE + buildQuery();
+    if($('preview').src !== src) $('preview').src = src;
+  }
+  FIELDS.forEach(function(f){ $(f[1]).addEventListener('input', refresh); });
+
+  document.querySelectorAll('.copy-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var text=$(btn.getAttribute('data-target')).textContent;
+      var done=function(){ var o=btn.textContent; btn.textContent='Copied'; btn.classList.add('done');
+        setTimeout(function(){ btn.textContent=o; btn.classList.remove('done'); },1500); };
+      if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done, function(){fallback(text);done();}); }
+      else { fallback(text); done(); }
+    });
+  });
+  function fallback(text){ var ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch(e){} document.body.removeChild(ta); }
+
+  window.addEventListener('message', function(e){
+    if(e.data && e.data.type==='zr-klaviyo-form:height'){ $('preview').style.height=e.data.height+'px'; }
+  });
+
+  refresh();
+})();
+</script>
+</body>
+</html>
