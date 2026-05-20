@@ -176,6 +176,9 @@
   var REVISION = '2025-04-15';
   var API_URL = 'https://a.klaviyo.com/client/subscriptions/?company_id=' + encodeURIComponent(COMPANY_ID);
 
+  // Filled by the IP geo fallback (when city/country are not in the URL). Provenance only.
+  var geoInfo = null;
+
   var COUNTRY_OPTIONS = [
     ['AE', 'United Arab Emirates'], ['AT', 'Austria'], ['BE', 'Belgium'], ['BG', 'Bulgaria'],
     ['BR', 'Brazil'], ['CH', 'Switzerland'], ['CY', 'Cyprus'], ['CZ', 'Czech Republic'],
@@ -312,6 +315,10 @@
       utm_content: params.utm_content || null,
       city_input: cityValue || null,
       country_input: countryLabel || null,
+      geo_country: geoInfo ? geoInfo.country_code : null,
+      geo_city: geoInfo ? geoInfo.city : null,
+      geo_source: geoInfo ? geoInfo.source : null,
+      location_source: (params.city || params.country) ? 'url-param' : (geoInfo ? 'ip-geo' : 'manual'),
       source: 'in-store-qr-api-form',
       consent_privacy_policy: true,
       consent_privacy_policy_at: new Date().toISOString()
@@ -398,6 +405,45 @@
     return { ok: false, status: res.status, body: bodyText };
   }
 
+  // ---- IP geo fallback: only when city/country are NOT in the URL ----
+  // Pre-fills from the visitor's IP. Never overrides a URL param or what the user typed.
+  function applyGeo(geo) {
+    if (!params.country && geo.country_code && !countrySelect.value) {
+      var norm = normalizeCountry(geo.country_code);
+      if (norm) {
+        if (!COUNTRY_BY_CODE[norm]) buildCountrySelect(countrySelect, norm);
+        countrySelect.value = norm;
+      }
+    }
+    if (!params.city && geo.city && !cityInput.value) {
+      cityInput.value = geo.city;
+    }
+    geoInfo = { source: geo._source, country_code: geo.country_code || null, city: geo.city || null };
+    renderDebug(null, 'idle');
+    postHeight();
+  }
+
+  function fetchGeo() {
+    // Two free, no-key, CORS-enabled providers. Both return ISO-2 country_code + city.
+    fetch('https://ipapi.co/json/')
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+      .then(function (d) {
+        if (d && (d.country_code || d.city)) { d._source = 'ipapi.co'; applyGeo(d); }
+        else throw new Error('empty');
+      })
+      .catch(function () {
+        fetch('https://ipwho.is/')
+          .then(function (r) { return r.json(); })
+          .then(function (d) {
+            if (d && d.success !== false && (d.country_code || d.city)) {
+              d._source = 'ipwho.is';
+              applyGeo(d);
+            }
+          })
+          .catch(function () { /* geo unavailable — leave the fields empty */ });
+      });
+  }
+
   // ---- iframe height broadcast (lets embedders auto-size the iframe) ----
   function postHeight() {
     try {
@@ -425,6 +471,9 @@
   qrInput.value = params.qr_id || '';
   renderStorePill(params.store_id, params.channel || 'qr-code');
   renderDebug(null, 'idle');
+
+  // If the URL didn't supply city/country, infer them from the visitor's IP.
+  if (!params.country || !params.city) fetchGeo();
 
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
