@@ -21,10 +21,18 @@
   body{
     font-family:var(--sans);
     color:var(--off);
+    min-height:100vh;
     display:flex;
     justify-content:center;
-    align-items:flex-start;
-    padding:28px 14px;
+    align-items:center;
+    padding:32px 14px;
+  }
+  .page{
+    width:min(640px,100%);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:18px;
   }
 
   .sheet{
@@ -59,6 +67,8 @@
   .head .sub{font-size:14.5px;line-height:1.5;color:var(--off-soft);max-width:46ch;margin:0 auto}
 
   form{display:flex;flex-direction:column;gap:20px}
+  /* mobile: stack everything with one equal gap */
+  .row{display:flex;flex-direction:column;gap:20px}
   .field{display:flex;flex-direction:column;gap:7px}
   .field label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--off-soft)}
   .field input,.field select{
@@ -109,7 +119,7 @@
 
   .lang-switch{
     display:flex;align-items:center;justify-content:center;gap:8px;
-    margin-top:6px;padding-top:16px;border-top:1px solid var(--line);
+    margin-top:2px;
   }
   .lang-switch label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--off-soft)}
   .lang-switch select{
@@ -139,8 +149,9 @@
 </style>
 </head>
 <body>
-<main class="sheet" aria-label="signup form">
+<div class="page">
   <img class="logo" src="logo.svg" alt="Zielinski & Rozen" width="188" height="39">
+  <main class="sheet" aria-label="signup form">
   <header class="head">
     <h1 id="t-title"></h1>
     <p class="sub" id="t-subtitle"></p>
@@ -186,12 +197,13 @@
       <pre id="debug-json"></pre>
     </details>
   </form>
+  </main>
 
   <div class="lang-switch">
     <label for="lang-select" id="t-lang-label"></label>
     <select id="lang-select"></select>
   </div>
-</main>
+</div>
 
 <script>
 (function () {
@@ -454,15 +466,46 @@
     }
     renderDebug(null,'idle'); postHeight();
   }
-  function fetchGeo(){
-    fetch('https://ipapi.co/json/').then(function(r){return r.ok?r.json():Promise.reject();})
-      .then(function(d){ if(d&&(d.country_code||d.city)){d._source='ipapi.co';applyGeo(d);} else throw new Error('empty'); })
-      .catch(function(){
-        fetch('https://ipwho.is/').then(function(r){return r.json();})
-          .then(function(d){ if(d&&d.success!==false&&(d.country_code||d.city)){d._source='ipwho.is';applyGeo(d);} })
-          .catch(function(){});
-      });
+  var GEO_PROVIDERS = [
+    {host:'get.geojs.io',  url:'https://get.geojs.io/v1/ip/geo.json', map:function(d){return {country_code:d.country_code, city:d.city};}},
+    {host:'ipapi.co',      url:'https://ipapi.co/json/',              map:function(d){return {country_code:d.country_code, city:d.city};}},
+    {host:'ipwho.is',      url:'https://ipwho.is/',                   map:function(d){return d.success===false?{}:{country_code:d.country_code, city:d.city};}},
+    {host:'api.country.is',url:'https://api.country.is/',            map:function(d){return {country_code:d.country, city:''};}}
+  ];
+  // Offline fallback by timezone (when every geo provider is blocked/rate-limited).
+  var TZ_MAP = {
+    'Asia/Jerusalem':['he','IL'],'Asia/Tel_Aviv':['he','IL'],
+    'Asia/Dubai':['ar','AE'],'Asia/Riyadh':['ar','SA'],'Asia/Qatar':['ar','QA'],'Asia/Kuwait':['ar','KW'],
+    'Asia/Bahrain':['ar','BH'],'Asia/Muscat':['ar','OM'],'Asia/Amman':['ar','JO'],'Asia/Beirut':['ar','LB'],
+    'Africa/Cairo':['ar','EG'],'Africa/Casablanca':['ar','MA'],
+    'Europe/Paris':['fr','FR'],'Europe/Madrid':['es','ES'],'Europe/Berlin':['de','DE'],'Europe/Vienna':['de','AT'],
+    'Europe/Zurich':['de','CH'],'Europe/Rome':['it','IT'],'America/Sao_Paulo':['pt','BR'],'Europe/Lisbon':['pt','PT'],
+    'Europe/Moscow':['ru','RU'],'Asia/Kolkata':['hi','IN'],'Asia/Calcutta':['hi','IN'],
+    'Asia/Shanghai':['zh','CN'],'Asia/Hong_Kong':['zh','HK'],'Asia/Taipei':['zh','TW'],
+    'America/New_York':['en','US'],'America/Chicago':['en','US'],'America/Denver':['en','US'],'America/Los_Angeles':['en','US'],
+    'Europe/London':['en','GB']
+  };
+  function geoTzFallback(){
+    try{
+      var tz=Intl.DateTimeFormat().resolvedOptions().timeZone;
+      var m=tz && TZ_MAP[tz];
+      if(!m) return;
+      if(!params.country && !$('country').value && COUNTRY_EN[m[1]]){
+        $('country').value=m[1];
+        geoInfo={source:'timezone', country_code:m[1], city:null};
+      }
+      if(langSource==='default') setLang(m[0],'timezone');
+      renderDebug(null,'idle'); postHeight();
+    }catch(e){}
   }
+  function tryGeo(i){
+    if(i>=GEO_PROVIDERS.length){ geoTzFallback(); return; }
+    var p=GEO_PROVIDERS[i];
+    fetch(p.url).then(function(r){return r.ok?r.json():Promise.reject();})
+      .then(function(d){ var g=p.map(d)||{}; if(g.country_code||g.city){ g._source=p.host; applyGeo(g); } else throw new Error('empty'); })
+      .catch(function(){ tryGeo(i+1); });
+  }
+  function fetchGeo(){ tryGeo(0); }
 
   // ---------- iframe height broadcast ----------
   function postHeight(){
