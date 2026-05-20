@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>Sign Up — Zielinski & Rozen</title>
+<title>Zielinski & Rozen — Sign Up</title>
 <style>
   :root{
     --cream:#F4F0E8;
@@ -14,6 +14,7 @@
     --ok:#0B6B3A;
     --err:#9B1C1C;
     --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    --serif:Georgia,"Times New Roman",serif;
   }
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   html,body{min-height:100%;background:var(--cream)}
@@ -23,26 +24,43 @@
     display:flex;
     justify-content:center;
     align-items:flex-start;
-    padding:24px 12px;
+    padding:28px 14px;
   }
 
   .sheet{
-    width:min(680px,100%);
+    width:min(640px,100%);
     background:var(--cream);
     border:1px solid var(--line);
-    padding:24px 20px;
+    padding:30px 24px 22px;
     display:flex;
     flex-direction:column;
-    gap:18px;
+    gap:22px;
+    transform-origin:center top;
+    animation:zr-enter .8s cubic-bezier(.16,.84,.44,1) both;
   }
-  .head{display:flex;flex-direction:column;gap:6px}
-  .head h1{font-size:22px;letter-spacing:.04em;font-weight:600;line-height:1.1;text-transform:uppercase}
-  .head .sub{font-size:15px;line-height:1.4;color:var(--off)}
-  .store-pill{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--off-soft)}
+  @keyframes zr-enter{
+    from{opacity:0;transform:scale(.972)}
+    to{opacity:1;transform:scale(1)}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .sheet{animation:none}
+  }
 
-  form{display:flex;flex-direction:column;gap:14px}
-  .field{display:flex;flex-direction:column;gap:5px}
-  .field label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--off-soft)}
+  .logo{display:block;width:188px;height:auto;margin:2px auto 4px;opacity:.92}
+
+  .head{display:flex;flex-direction:column;gap:9px;text-align:center}
+  .head h1{
+    font-family:var(--serif);
+    font-size:27px;
+    font-weight:400;
+    line-height:1.15;
+    letter-spacing:.01em;
+  }
+  .head .sub{font-size:14.5px;line-height:1.5;color:var(--off-soft);max-width:46ch;margin:0 auto}
+
+  form{display:flex;flex-direction:column;gap:20px}
+  .field{display:flex;flex-direction:column;gap:7px}
+  .field label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--off-soft)}
   .field input,.field select{
     width:100%;
     height:46px;
@@ -56,95 +74,98 @@
     appearance:none;
   }
   .field input:focus,.field select:focus{outline:none;border-color:var(--off)}
-  .field select{background-image:linear-gradient(45deg,transparent 50%,var(--off) 50%),linear-gradient(135deg,var(--off) 50%,transparent 50%);background-position:calc(100% - 18px) 20px,calc(100% - 12px) 20px;background-size:6px 6px,6px 6px;background-repeat:no-repeat;padding-right:34px}
+  #email{direction:ltr;text-align:left}
 
-  .consent{
-    display:flex;
-    gap:9px;
-    align-items:flex-start;
-    margin-top:2px;
+  /* select caret — right in LTR, left in RTL */
+  .field select{
+    background-image:linear-gradient(45deg,transparent 50%,var(--off) 50%),linear-gradient(135deg,var(--off) 50%,transparent 50%);
+    background-position:calc(100% - 18px) 20px,calc(100% - 12px) 20px;
+    background-size:6px 6px,6px 6px;background-repeat:no-repeat;padding-right:34px;
   }
+  [dir="rtl"] .field select{
+    background-position:18px 20px,24px 20px;
+    padding-right:12px;padding-left:34px;
+  }
+
+  .consent{display:flex;gap:9px;align-items:flex-start;margin-top:2px}
   .consent input{
-    margin-top:2px;
-    width:16px;
-    height:16px;
-    min-width:16px;
-    border:1px solid var(--line);
-    appearance:none;
-    background:#fff;
-    cursor:pointer;
+    margin-top:2px;width:16px;height:16px;min-width:16px;
+    border:1px solid var(--line);appearance:none;background:#fff;cursor:pointer;
   }
   .consent input:checked{background:var(--off)}
-  .consent .txt{font-size:12px;line-height:1.45;color:var(--off)}
+  .consent .txt{font-size:12px;line-height:1.5;color:var(--off)}
   .consent a{color:inherit;text-decoration:underline;text-underline-offset:2px}
 
   button[type="submit"]{
-    border-radius:0;
-    margin-top:4px;
-    height:48px;
-    border:1px solid var(--off);
-    background:var(--off);
-    color:#fff;
-    font-family:var(--sans);
-    font-size:15px;
-    letter-spacing:.1em;
-    text-transform:uppercase;
-    cursor:pointer;
+    border-radius:0;margin-top:4px;height:50px;
+    border:1px solid var(--off);background:var(--off);color:#fff;
+    font-family:var(--sans);font-size:13px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;
   }
   button[disabled]{opacity:.6;cursor:wait}
 
-  .status{min-height:18px;font-size:12px;color:var(--off-soft)}
+  .status{min-height:18px;font-size:12.5px;color:var(--off-soft);text-align:center}
   .status.ok{color:var(--ok)}
   .status.err{color:var(--err)}
+
+  .lang-switch{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    margin-top:6px;padding-top:16px;border-top:1px solid var(--line);
+  }
+  .lang-switch label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--off-soft)}
+  .lang-switch select{
+    appearance:none;border:0;background:transparent;
+    font-family:var(--sans);font-size:13px;color:var(--off);cursor:pointer;
+    padding:4px 18px 4px 6px;
+    background-image:linear-gradient(45deg,transparent 50%,var(--off-soft) 50%),linear-gradient(135deg,var(--off-soft) 50%,transparent 50%);
+    background-position:calc(100% - 8px) 11px,calc(100% - 4px) 11px;
+    background-size:5px 5px,5px 5px;background-repeat:no-repeat;
+  }
 
   details.debug{border-top:1px solid var(--line);padding-top:10px}
   details.debug summary{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--off-soft);cursor:pointer;list-style:none}
   details.debug summary::-webkit-details-marker{display:none}
   details.debug pre{
-    margin-top:8px;
-    font-size:11px;
-    line-height:1.45;
-    white-space:pre-wrap;
-    word-break:break-word;
-    color:var(--off-soft);
+    margin-top:8px;font-size:11px;line-height:1.45;white-space:pre-wrap;word-break:break-word;
+    color:var(--off-soft);text-align:left;direction:ltr;
     font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
   }
 
   @media (min-width: 768px){
-    body{padding:36px}
-    .sheet{padding:28px}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    body{padding:40px}
+    .sheet{padding:34px 36px 24px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .head h1{font-size:30px}
   }
 </style>
 </head>
 <body>
 <main class="sheet" aria-label="signup form">
+  <img class="logo" src="logo.svg" alt="Zielinski & Rozen" width="188" height="39">
   <header class="head">
-    <h1>Sign Up</h1>
-    <p class="sub">Leave your details for updates, events and exhibitions.</p>
-    <p class="store-pill" id="store-pill"></p>
+    <h1 id="t-title"></h1>
+    <p class="sub" id="t-subtitle"></p>
   </header>
 
   <form id="qr-form" novalidate>
     <div class="row">
       <div class="field">
-        <label for="full-name">Full Name</label>
-        <input id="full-name" name="full_name" type="text" autocomplete="name" placeholder="Your name">
+        <label for="full-name" id="t-name"></label>
+        <input id="full-name" name="full_name" type="text" autocomplete="name">
       </div>
       <div class="field">
-        <label for="email">Email</label>
+        <label for="email" id="t-email"></label>
         <input id="email" name="email" type="email" required autocomplete="email" placeholder="name@example.com">
       </div>
     </div>
 
     <div class="row">
       <div class="field">
-        <label for="country">Country</label>
+        <label for="country" id="t-country"></label>
         <select id="country" name="country" required></select>
       </div>
       <div class="field">
-        <label for="city">City</label>
-        <input id="city" name="city" type="text" required placeholder="City">
+        <label for="city" id="t-city"></label>
+        <input id="city" name="city" type="text" required>
       </div>
     </div>
 
@@ -154,10 +175,10 @@
 
     <label class="consent" for="privacy-consent">
       <input id="privacy-consent" name="privacy_consent" type="checkbox" required>
-      <span class="txt">I have read and agree to the <a href="https://zielinskiandrozen.com/pages/gdpr-privacy-policy" target="_blank" rel="noopener">Privacy Policy</a> <strong>(required)</strong></span>
+      <span class="txt"><span id="c-pre"></span><a id="c-link" href="https://zielinskiandrozen.com/pages/gdpr-privacy-policy" target="_blank" rel="noopener"></a><span id="c-post"></span></span>
     </label>
 
-    <button id="submit-btn" type="submit">Sign Up</button>
+    <button id="submit-btn" type="submit"></button>
     <p class="status" id="status" aria-live="polite"></p>
 
     <details class="debug" id="debug-block">
@@ -165,6 +186,11 @@
       <pre id="debug-json"></pre>
     </details>
   </form>
+
+  <div class="lang-switch">
+    <label for="lang-select" id="t-lang-label"></label>
+    <select id="lang-select"></select>
+  </div>
 </main>
 
 <script>
@@ -176,352 +202,324 @@
   var REVISION = '2025-04-15';
   var API_URL = 'https://a.klaviyo.com/client/subscriptions/?company_id=' + encodeURIComponent(COMPANY_ID);
 
-  // Filled by the IP geo fallback (when city/country are not in the URL). Provenance only.
   var geoInfo = null;
+  var currentLang = 'en';
+  var langSource = 'default';
 
-  var COUNTRY_OPTIONS = [
-    ['AE', 'United Arab Emirates'], ['AT', 'Austria'], ['BE', 'Belgium'], ['BG', 'Bulgaria'],
-    ['BR', 'Brazil'], ['CH', 'Switzerland'], ['CY', 'Cyprus'], ['CZ', 'Czech Republic'],
-    ['DE', 'Germany'], ['DK', 'Denmark'], ['EE', 'Estonia'], ['ES', 'Spain'],
-    ['FI', 'Finland'], ['FR', 'France'], ['GB', 'United Kingdom'], ['GR', 'Greece'],
-    ['HR', 'Croatia'], ['HU', 'Hungary'], ['IE', 'Ireland'], ['IL', 'Israel'],
-    ['IN', 'India'], ['IT', 'Italy'], ['LT', 'Lithuania'], ['LU', 'Luxembourg'],
-    ['LV', 'Latvia'], ['MT', 'Malta'], ['NL', 'Netherlands'], ['PL', 'Poland'],
-    ['PT', 'Portugal'], ['RO', 'Romania'], ['RS', 'Serbia'], ['SE', 'Sweden'],
-    ['SI', 'Slovenia'], ['SK', 'Slovakia'], ['US', 'United States']
-  ];
+  // ---------- i18n ----------
+  var SUPPORTED = ['en','he','ar','fr','es','de','it','pt','ru','hi','zh'];
+  var LANG_NAMES = {
+    en:'English', he:'עברית', ar:'العربية', fr:'Français', es:'Español',
+    de:'Deutsch', it:'Italiano', pt:'Português', ru:'Русский', hi:'हिन्दी', zh:'中文'
+  };
+  var RTL = { he:1, ar:1 };
+  // For Intl.DisplayNames region locales (BCP-47)
+  var DN_LOCALE = { en:'en', he:'he', ar:'ar', fr:'fr', es:'es', de:'de', it:'it', pt:'pt-BR', ru:'ru', hi:'hi', zh:'zh-Hans' };
 
-  var COUNTRY_BY_CODE = {};
-  COUNTRY_OPTIONS.forEach(function (item) { COUNTRY_BY_CODE[item[0]] = item[1]; });
+  var STR = {
+    en:{title:"Be the First to Know",subtitle:"Sign up for exclusive offers and early access to new fragrances and art.",name:"Full Name",email:"Email",country:"Country",city:"City",name_ph:"Your name",city_ph:"City",select_country:"Select country",c_pre:"I have read and agree to the ",privacy:"Privacy Policy",c_post:" (required)",button:"Sign Up",sending:"Sending…",success:"Thank you — you're on the list.",err_http:"Something went wrong. Please try again.",err_net:"Network error. Please try again.",err_required:"Please complete all required fields.",lang_label:"Language"},
+    he:{title:"להיות הראשונים לדעת",subtitle:"הירשמו למבצעים בלעדיים וגישה מוקדמת לבשמים ולאמנות חדשים.",name:"שם מלא",email:"אימייל",country:"מדינה",city:"עיר",name_ph:"השם שלך",city_ph:"עיר",select_country:"בחרו מדינה",c_pre:"קראתי ואני מסכים/ה ל",privacy:"מדיניות הפרטיות",c_post:" (חובה)",button:"הרשמה",sending:"שולח…",success:"תודה — נרשמת בהצלחה.",err_http:"משהו השתבש. נסו שוב.",err_net:"שגיאת רשת. נסו שוב.",err_required:"אנא מלאו את כל שדות החובה.",lang_label:"שפה"},
+    ar:{title:"كن أول من يعرف",subtitle:"اشترك للحصول على عروض حصرية ووصول مبكر إلى عطور وأعمال فنية جديدة.",name:"الاسم الكامل",email:"البريد الإلكتروني",country:"الدولة",city:"المدينة",name_ph:"اسمك",city_ph:"المدينة",select_country:"اختر الدولة",c_pre:"لقد قرأت وأوافق على ",privacy:"سياسة الخصوصية",c_post:" (مطلوب)",button:"اشتراك",sending:"جارٍ الإرسال…",success:"شكرًا لك — تم تسجيلك.",err_http:"حدث خطأ ما. حاول مرة أخرى.",err_net:"خطأ في الشبكة. حاول مرة أخرى.",err_required:"يرجى إكمال جميع الحقول المطلوبة.",lang_label:"اللغة"},
+    fr:{title:"Soyez les premiers informés",subtitle:"Inscrivez-vous pour des offres exclusives et un accès anticipé aux nouveaux parfums et œuvres d'art.",name:"Nom complet",email:"E-mail",country:"Pays",city:"Ville",name_ph:"Votre nom",city_ph:"Ville",select_country:"Choisissez un pays",c_pre:"J'ai lu et j'accepte la ",privacy:"Politique de confidentialité",c_post:" (obligatoire)",button:"S'inscrire",sending:"Envoi…",success:"Merci — vous êtes inscrit.",err_http:"Une erreur s'est produite. Veuillez réessayer.",err_net:"Erreur réseau. Veuillez réessayer.",err_required:"Veuillez remplir tous les champs obligatoires.",lang_label:"Langue"},
+    es:{title:"Sé el primero en saberlo",subtitle:"Suscríbete para recibir ofertas exclusivas y acceso anticipado a nuevas fragancias y arte.",name:"Nombre completo",email:"Correo electrónico",country:"País",city:"Ciudad",name_ph:"Tu nombre",city_ph:"Ciudad",select_country:"Selecciona un país",c_pre:"He leído y acepto la ",privacy:"Política de Privacidad",c_post:" (obligatorio)",button:"Suscribirse",sending:"Enviando…",success:"Gracias — ya estás en la lista.",err_http:"Algo salió mal. Inténtalo de nuevo.",err_net:"Error de red. Inténtalo de nuevo.",err_required:"Completa todos los campos obligatorios.",lang_label:"Idioma"},
+    de:{title:"Erfahren Sie es als Erste",subtitle:"Melden Sie sich an für exklusive Angebote und frühen Zugang zu neuen Düften und Kunst.",name:"Vollständiger Name",email:"E-Mail",country:"Land",city:"Stadt",name_ph:"Ihr Name",city_ph:"Stadt",select_country:"Land auswählen",c_pre:"Ich habe die ",privacy:"Datenschutzrichtlinie",c_post:" gelesen und stimme zu (erforderlich)",button:"Anmelden",sending:"Senden…",success:"Danke — Sie sind dabei.",err_http:"Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",err_net:"Netzwerkfehler. Bitte versuchen Sie es erneut.",err_required:"Bitte füllen Sie alle Pflichtfelder aus.",lang_label:"Sprache"},
+    it:{title:"Sii il primo a saperlo",subtitle:"Iscriviti per offerte esclusive e accesso anticipato a nuove fragranze e arte.",name:"Nome completo",email:"E-mail",country:"Paese",city:"Città",name_ph:"Il tuo nome",city_ph:"Città",select_country:"Seleziona un paese",c_pre:"Ho letto e accetto l'",privacy:"Informativa sulla privacy",c_post:" (obbligatorio)",button:"Iscriviti",sending:"Invio…",success:"Grazie — sei iscritto.",err_http:"Qualcosa è andato storto. Riprova.",err_net:"Errore di rete. Riprova.",err_required:"Compila tutti i campi obbligatori.",lang_label:"Lingua"},
+    pt:{title:"Seja o primeiro a saber",subtitle:"Inscreva-se para ofertas exclusivas e acesso antecipado a novas fragrâncias e arte.",name:"Nome completo",email:"E-mail",country:"País",city:"Cidade",name_ph:"Seu nome",city_ph:"Cidade",select_country:"Selecione um país",c_pre:"Li e concordo com a ",privacy:"Política de Privacidade",c_post:" (obrigatório)",button:"Inscrever-se",sending:"Enviando…",success:"Obrigado — você está na lista.",err_http:"Algo deu errado. Tente novamente.",err_net:"Erro de rede. Tente novamente.",err_required:"Preencha todos os campos obrigatórios.",lang_label:"Idioma"},
+    ru:{title:"Узнайте первыми",subtitle:"Подпишитесь, чтобы получать эксклюзивные предложения и ранний доступ к новым ароматам и искусству.",name:"Полное имя",email:"Электронная почта",country:"Страна",city:"Город",name_ph:"Ваше имя",city_ph:"Город",select_country:"Выберите страну",c_pre:"Я прочитал(а) и согласен(на) с ",privacy:"Политикой конфиденциальности",c_post:" (обязательно)",button:"Подписаться",sending:"Отправка…",success:"Спасибо — вы подписаны.",err_http:"Что-то пошло не так. Попробуйте ещё раз.",err_net:"Ошибка сети. Попробуйте ещё раз.",err_required:"Пожалуйста, заполните все обязательные поля.",lang_label:"Язык"},
+    hi:{title:"सबसे पहले जानें",subtitle:"विशेष ऑफ़र और नई खुशबुओं व कला तक जल्दी पहुंच के लिए साइन अप करें।",name:"पूरा नाम",email:"ईमेल",country:"देश",city:"शहर",name_ph:"आपका नाम",city_ph:"शहर",select_country:"देश चुनें",c_pre:"मैंने ",privacy:"गोपनीयता नीति",c_post:" पढ़ ली है और सहमत हूं (आवश्यक)",button:"साइन अप करें",sending:"भेजा जा रहा है…",success:"धन्यवाद — आप सूची में शामिल हैं।",err_http:"कुछ गलत हो गया। कृपया पुनः प्रयास करें।",err_net:"नेटवर्क त्रुटि। कृपया पुनः प्रयास करें।",err_required:"कृपया सभी आवश्यक फ़ील्ड भरें।",lang_label:"भाषा"},
+    zh:{title:"抢先知道",subtitle:"注册以获取专属优惠，并抢先了解全新香氛与艺术。",name:"全名",email:"电子邮箱",country:"国家/地区",city:"城市",name_ph:"您的姓名",city_ph:"城市",select_country:"选择国家/地区",c_pre:"我已阅读并同意",privacy:"隐私政策",c_post:"（必填）",button:"注册",sending:"发送中…",success:"谢谢 — 您已成功注册。",err_http:"出错了，请重试。",err_net:"网络错误，请重试。",err_required:"请填写所有必填字段。",lang_label:"语言"}
+  };
 
-  function qp(name, sp) {
-    return (sp.get(name) || '').trim();
-  }
+  // ---------- countries (ISO-2 codes; English names for the submitted value + fallback) ----------
+  var COUNTRY_EN = {
+    IL:'Israel', AE:'United Arab Emirates', SA:'Saudi Arabia', QA:'Qatar', KW:'Kuwait', BH:'Bahrain', OM:'Oman',
+    JO:'Jordan', LB:'Lebanon', EG:'Egypt', TR:'Turkey', MA:'Morocco', TN:'Tunisia', DZ:'Algeria',
+    AT:'Austria', BE:'Belgium', BG:'Bulgaria', CH:'Switzerland', CY:'Cyprus', CZ:'Czechia', DE:'Germany',
+    DK:'Denmark', EE:'Estonia', ES:'Spain', FI:'Finland', FR:'France', GB:'United Kingdom', GR:'Greece',
+    HR:'Croatia', HU:'Hungary', IE:'Ireland', IS:'Iceland', IT:'Italy', LT:'Lithuania', LU:'Luxembourg',
+    LV:'Latvia', MT:'Malta', NL:'Netherlands', NO:'Norway', PL:'Poland', PT:'Portugal', RO:'Romania',
+    RS:'Serbia', RU:'Russia', SE:'Sweden', SI:'Slovenia', SK:'Slovakia', UA:'Ukraine',
+    US:'United States', CA:'Canada', MX:'Mexico', BR:'Brazil', AR:'Argentina', CL:'Chile', CO:'Colombia', PE:'Peru',
+    IN:'India', CN:'China', HK:'Hong Kong', TW:'Taiwan', JP:'Japan', KR:'South Korea', SG:'Singapore',
+    AU:'Australia', NZ:'New Zealand', TH:'Thailand'
+  };
+  var COUNTRY_CODES = Object.keys(COUNTRY_EN);
 
-  function parseParams() {
+  // country -> default UI language
+  var COUNTRY_LANG = {
+    IL:'he',
+    AE:'ar', SA:'ar', QA:'ar', KW:'ar', BH:'ar', OM:'ar', JO:'ar', LB:'ar', EG:'ar', MA:'ar', TN:'ar', DZ:'ar',
+    FR:'fr',
+    ES:'es', MX:'es', AR:'es', CL:'es', CO:'es', PE:'es',
+    BR:'pt', PT:'pt',
+    RU:'ru',
+    IN:'hi',
+    CN:'zh', HK:'zh', TW:'zh',
+    DE:'de', AT:'de',
+    IT:'it'
+  };
+
+  function qp(name, sp){ return (sp.get(name) || '').trim(); }
+
+  function parseParams(){
     var sp = new URLSearchParams(window.location.search);
     return {
-      store_id: qp('store_id', sp) || qp('store', sp) || qp('shop_id', sp) || qp('location_id', sp),
-      city: qp('city', sp),
-      country: qp('country', sp) || qp('country_code', sp),
-      channel: qp('channel', sp) || qp('source', sp) || qp('utm_source', sp) || 'qr-code',
-      qr_id: qp('qr_id', sp) || qp('qr', sp) || qp('code', sp),
-      utm_source: qp('utm_source', sp),
-      utm_medium: qp('utm_medium', sp),
-      utm_campaign: qp('utm_campaign', sp),
-      utm_term: qp('utm_term', sp),
-      utm_content: qp('utm_content', sp)
+      store_id: qp('store_id',sp)||qp('store',sp)||qp('shop_id',sp)||qp('location_id',sp),
+      city: qp('city',sp),
+      country: qp('country',sp)||qp('country_code',sp),
+      channel: qp('channel',sp)||qp('source',sp)||qp('utm_source',sp)||'qr-code',
+      qr_id: qp('qr_id',sp)||qp('qr',sp)||qp('code',sp),
+      lang: qp('lang',sp)||qp('locale',sp),
+      utm_source: qp('utm_source',sp), utm_medium: qp('utm_medium',sp),
+      utm_campaign: qp('utm_campaign',sp), utm_term: qp('utm_term',sp), utm_content: qp('utm_content',sp)
     };
   }
 
-  function normalizeCountry(raw) {
-    if (!raw) return '';
-    var clean = raw.replace(/_/g, ' ').trim();
-    if (clean.length === 2) {
-      var code = clean.toUpperCase();
-      if (COUNTRY_BY_CODE[code]) return code;
-    }
+  function escapeHtml(s){
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function normalizeCountry(raw){
+    if(!raw) return '';
+    var clean = raw.replace(/_/g,' ').trim();
+    if(clean.length===2){ var code=clean.toUpperCase(); if(COUNTRY_EN[code]) return code; }
     var lower = clean.toLowerCase();
-    for (var i = 0; i < COUNTRY_OPTIONS.length; i++) {
-      if (COUNTRY_OPTIONS[i][1].toLowerCase() === lower) return COUNTRY_OPTIONS[i][0];
-    }
+    for(var i=0;i<COUNTRY_CODES.length;i++){ if(COUNTRY_EN[COUNTRY_CODES[i]].toLowerCase()===lower) return COUNTRY_CODES[i]; }
     return clean;
   }
 
-  function buildCountrySelect(select, normalized) {
-    var html = '<option value="">Select country</option>';
-    COUNTRY_OPTIONS.forEach(function (item) {
-      html += '<option value="' + item[0] + '">' + item[1] + '</option>';
-    });
-    if (normalized && !COUNTRY_BY_CODE[normalized]) {
-      html += '<option value="' + escapeHtml(normalized) + '">' + escapeHtml(normalized) + '</option>';
-    }
+  function localizedCountryName(code, lang){
+    try{
+      if(window.Intl && Intl.DisplayNames){
+        var dn = new Intl.DisplayNames([DN_LOCALE[lang]||lang,'en'], {type:'region'});
+        var n = dn.of(code);
+        if(n && n !== code) return n;
+      }
+    }catch(e){}
+    return COUNTRY_EN[code] || code;
+  }
+
+  function buildCountrySelect(select, lang, keepVal){
+    var sel = keepVal != null ? keepVal : select.value;
+    var rows = COUNTRY_CODES.map(function(code){ return [code, localizedCountryName(code, lang)]; });
+    try{ rows.sort(function(a,b){ return a[1].localeCompare(b[1], DN_LOCALE[lang]||lang); }); }
+    catch(e){ rows.sort(function(a,b){ return a[1]<b[1]?-1:1; }); }
+    var html = '<option value="">'+escapeHtml(STR[lang].select_country)+'</option>';
+    rows.forEach(function(r){ html += '<option value="'+r[0]+'">'+escapeHtml(r[1])+'</option>'; });
+    // preserve a custom (non-list) value that came from a URL param
+    if(sel && !COUNTRY_EN[sel]){ html += '<option value="'+escapeHtml(sel)+'">'+escapeHtml(sel)+'</option>'; }
     select.innerHTML = html;
-    if (normalized) select.value = normalized;
+    if(sel) select.value = sel;
   }
 
-  function escapeHtml(s) {
-    return String(s)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
-
-  function detectBrowser(ua) {
-    if (/Edg\//.test(ua)) return 'Edge';
-    if (/OPR\//.test(ua)) return 'Opera';
-    if (/Chrome\//.test(ua) && !/Edg\//.test(ua) && !/OPR\//.test(ua)) return 'Chrome';
-    if (/Safari\//.test(ua) && !/Chrome\//.test(ua)) return 'Safari';
-    if (/Firefox\//.test(ua)) return 'Firefox';
-    return 'Unknown';
-  }
-
-  function deviceType(ua) {
-    return /Mobi|Android|iPhone|iPad|iPod/i.test(ua) ? 'mobile' : 'desktop';
-  }
-
-  function splitName(full) {
-    var clean = (full || '').trim();
-    if (!clean) return {};
-    var bits = clean.split(/\s+/);
-    if (bits.length === 1) return { first_name: bits[0] };
-    return { first_name: bits.shift(), last_name: bits.join(' ') };
-  }
-
-  function countryValueForLocation(selectVal) {
-    if (!selectVal) return '';
-    return COUNTRY_BY_CODE[selectVal] || selectVal;
-  }
-
-  function renderStorePill(storeId, channel) {
-    var el = document.getElementById('store-pill');
-    var parts = [];
-    if (storeId) parts.push('STORE: ' + storeId);
-    if (channel) parts.push('CHANNEL: ' + channel);
-    el.textContent = parts.length ? parts.join(' · ') : 'CHANNEL: QR-CODE';
-  }
-
-  function setStatus(text, kind) {
-    var el = document.getElementById('status');
-    el.textContent = text || '';
-    el.classList.remove('ok', 'err');
-    if (kind) el.classList.add(kind);
-  }
-
-  function contextData(params, countryLabel, cityValue) {
-    var ua = navigator.userAgent || '';
-    return {
-      store_id: params.store_id || null,
-      channel: params.channel || 'qr-code',
-      qr_id: params.qr_id || null,
-      browser_name: detectBrowser(ua),
-      browser_language: navigator.language || null,
-      browser_languages: (navigator.languages || []).join(', ') || null,
-      timezone: (Intl.DateTimeFormat().resolvedOptions().timeZone || null),
-      platform: navigator.platform || null,
-      device_type: deviceType(ua),
-      user_agent: ua,
-      screen_resolution: (window.screen.width + 'x' + window.screen.height),
-      viewport: (window.innerWidth + 'x' + window.innerHeight),
-      referrer: document.referrer || null,
-      landing_url: location.href,
-      landing_path: location.pathname,
-      query_string: location.search || null,
-      utm_source: params.utm_source || null,
-      utm_medium: params.utm_medium || null,
-      utm_campaign: params.utm_campaign || null,
-      utm_term: params.utm_term || null,
-      utm_content: params.utm_content || null,
-      city_input: cityValue || null,
-      country_input: countryLabel || null,
-      geo_country: geoInfo ? geoInfo.country_code : null,
-      geo_city: geoInfo ? geoInfo.city : null,
-      geo_source: geoInfo ? geoInfo.source : null,
-      location_source: (params.city || params.country) ? 'url-param' : (geoInfo ? 'ip-geo' : 'manual'),
-      source: 'in-store-qr-api-form',
-      consent_privacy_policy: true,
-      consent_privacy_policy_at: new Date().toISOString()
-    };
-  }
-
-  function cleanObject(obj) {
-    var out = {};
-    Object.keys(obj).forEach(function (k) {
-      var v = obj[k];
-      if (v !== null && v !== undefined && v !== '') out[k] = v;
-    });
-    return out;
-  }
-
-  function buildPayload(values, params) {
-    var nameParts = splitName(values.full_name);
-    var countryLabel = countryValueForLocation(values.country);
-    var props = cleanObject(contextData(params, countryLabel, values.city));
-
-    var attrs = cleanObject({
-      email: values.email,
-      first_name: nameParts.first_name,
-      last_name: nameParts.last_name
-    });
-    attrs.location = cleanObject({
-      city: values.city,
-      country: countryLabel
-    });
-    attrs.properties = props;
-
-    return {
-      data: {
-        type: 'subscription',
-        attributes: {
-          profile: {
-            data: {
-              type: 'profile',
-              attributes: attrs
-            }
-          }
-        },
-        relationships: {
-          list: { data: { type: 'list', id: LIST_ID } }
-        }
-      }
-    };
-  }
-
-  function renderDebug(payload, submitState) {
-    var details = document.getElementById('debug-block');
-    var debugParam = new URLSearchParams(location.search).get('debug');
-    if (debugParam !== '1') {
-      details.style.display = 'none';
-      details.open = false;
-    } else {
-      details.style.display = 'block';
-      details.open = true;
+  // ---------- language detection ----------
+  function navLangMatch(){
+    var langs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language||''];
+    for(var i=0;i<langs.length;i++){
+      var p = String(langs[i]||'').toLowerCase().split('-')[0];
+      if(p==='iw') p='he';
+      if(p==='in') p='id'; // edge: legacy code, not supported -> skip
+      if(SUPPORTED.indexOf(p)!==-1) return p;
     }
-
-    var view = {
-      endpoint: API_URL,
-      list_id: LIST_ID,
-      submit: submitState || 'idle',
-      profile_preview: payload ? payload.data.attributes.profile.data.attributes : null
-    };
-    document.getElementById('debug-json').textContent = JSON.stringify(view, null, 2);
+    return '';
   }
 
-  async function submitToKlaviyo(payload) {
-    var res = await fetch(API_URL, {
-      method: 'POST',
-      headers: {
-        'accept': 'application/vnd.api+json',
-        'content-type': 'application/vnd.api+json',
-        'revision': REVISION
-      },
-      body: JSON.stringify(payload)
-    });
-
-    if (res.ok) return { ok: true, status: res.status };
-    var bodyText = '';
-    try { bodyText = await res.text(); } catch (e) {}
-    return { ok: false, status: res.status, body: bodyText };
+  function determineLang(params, normCountry){
+    if(params.lang){ var l=params.lang.toLowerCase().split('-')[0]; if(SUPPORTED.indexOf(l)!==-1) return {lang:l, source:'url'}; }
+    var saved=''; try{ saved=localStorage.getItem('zr_lang')||''; }catch(e){}
+    if(saved && SUPPORTED.indexOf(saved)!==-1) return {lang:saved, source:'saved'};
+    var nav = navLangMatch();
+    if(nav) return {lang:nav, source:'browser'};
+    if(normCountry && COUNTRY_LANG[normCountry]) return {lang:COUNTRY_LANG[normCountry], source:'country'};
+    return {lang:'en', source:'default'};
   }
 
-  // ---- IP geo fallback: only when city/country are NOT in the URL ----
-  // Pre-fills from the visitor's IP. Never overrides a URL param or what the user typed.
-  function applyGeo(geo) {
-    if (!params.country && geo.country_code && !countrySelect.value) {
-      var norm = normalizeCountry(geo.country_code);
-      if (norm) {
-        if (!COUNTRY_BY_CODE[norm]) buildCountrySelect(countrySelect, norm);
-        countrySelect.value = norm;
-      }
-    }
-    if (!params.city && geo.city && !cityInput.value) {
-      cityInput.value = geo.city;
-    }
-    geoInfo = { source: geo._source, country_code: geo.country_code || null, city: geo.city || null };
-    renderDebug(null, 'idle');
+  // ---------- render ----------
+  var els = {};
+  function $(id){ return document.getElementById(id); }
+
+  function render(){
+    var s = STR[currentLang];
+    document.documentElement.lang = currentLang;
+    document.documentElement.dir = RTL[currentLang] ? 'rtl' : 'ltr';
+
+    $('t-title').textContent = s.title;
+    $('t-subtitle').textContent = s.subtitle;
+    $('t-name').textContent = s.name;
+    $('t-email').textContent = s.email;
+    $('t-country').textContent = s.country;
+    $('t-city').textContent = s.city;
+    $('full-name').placeholder = s.name_ph;
+    $('city').placeholder = s.city_ph;
+    $('c-pre').textContent = s.c_pre;
+    $('c-link').textContent = s.privacy;
+    $('c-post').textContent = s.c_post;
+    $('submit-btn').textContent = s.button;
+    $('t-lang-label').textContent = s.lang_label;
+
+    buildCountrySelect($('country'), currentLang);
+    if($('lang-select').value !== currentLang) $('lang-select').value = currentLang;
     postHeight();
   }
 
-  function fetchGeo() {
-    // Two free, no-key, CORS-enabled providers. Both return ISO-2 country_code + city.
-    fetch('https://ipapi.co/json/')
-      .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
-      .then(function (d) {
-        if (d && (d.country_code || d.city)) { d._source = 'ipapi.co'; applyGeo(d); }
-        else throw new Error('empty');
-      })
-      .catch(function () {
-        fetch('https://ipwho.is/')
-          .then(function (r) { return r.json(); })
-          .then(function (d) {
-            if (d && d.success !== false && (d.country_code || d.city)) {
-              d._source = 'ipwho.is';
-              applyGeo(d);
-            }
-          })
-          .catch(function () { /* geo unavailable — leave the fields empty */ });
+  function setLang(lang, source){
+    if(SUPPORTED.indexOf(lang)===-1) return;
+    currentLang = lang; langSource = source || 'manual';
+    render();
+  }
+
+  // ---------- payload ----------
+  function detectBrowser(ua){
+    if(/Edg\//.test(ua)) return 'Edge';
+    if(/OPR\//.test(ua)) return 'Opera';
+    if(/Chrome\//.test(ua)&&!/Edg\//.test(ua)&&!/OPR\//.test(ua)) return 'Chrome';
+    if(/Safari\//.test(ua)&&!/Chrome\//.test(ua)) return 'Safari';
+    if(/Firefox\//.test(ua)) return 'Firefox';
+    return 'Unknown';
+  }
+  function deviceType(ua){ return /Mobi|Android|iPhone|iPad|iPod/i.test(ua)?'mobile':'desktop'; }
+  function splitName(full){
+    var clean=(full||'').trim(); if(!clean) return {};
+    var bits=clean.split(/\s+/); if(bits.length===1) return {first_name:bits[0]};
+    return {first_name:bits.shift(), last_name:bits.join(' ')};
+  }
+  function countryValueForLocation(v){ if(!v) return ''; return COUNTRY_EN[v]||v; }
+
+  function setStatus(text, kind){
+    var el=$('status'); el.textContent=text||''; el.classList.remove('ok','err'); if(kind) el.classList.add(kind);
+  }
+
+  function contextData(params, countryLabel, cityValue){
+    var ua=navigator.userAgent||'';
+    return {
+      store_id: params.store_id||null, channel: params.channel||'qr-code', qr_id: params.qr_id||null,
+      ui_language: currentLang, language_source: langSource,
+      browser_name: detectBrowser(ua), browser_language: navigator.language||null,
+      browser_languages: (navigator.languages||[]).join(', ')||null,
+      timezone: (Intl.DateTimeFormat().resolvedOptions().timeZone||null),
+      platform: navigator.platform||null, device_type: deviceType(ua), user_agent: ua,
+      screen_resolution: (window.screen.width+'x'+window.screen.height),
+      viewport: (window.innerWidth+'x'+window.innerHeight),
+      referrer: document.referrer||null, landing_url: location.href, landing_path: location.pathname,
+      query_string: location.search||null,
+      utm_source: params.utm_source||null, utm_medium: params.utm_medium||null, utm_campaign: params.utm_campaign||null,
+      utm_term: params.utm_term||null, utm_content: params.utm_content||null,
+      city_input: cityValue||null, country_input: countryLabel||null,
+      geo_country: geoInfo?geoInfo.country_code:null, geo_city: geoInfo?geoInfo.city:null, geo_source: geoInfo?geoInfo.source:null,
+      location_source: (params.city||params.country)?'url-param':(geoInfo?'ip-geo':'manual'),
+      source: 'in-store-qr-api-form',
+      consent_privacy_policy: true, consent_privacy_policy_at: new Date().toISOString()
+    };
+  }
+  function cleanObject(obj){ var out={}; Object.keys(obj).forEach(function(k){var v=obj[k]; if(v!==null&&v!==undefined&&v!=='') out[k]=v;}); return out; }
+
+  function buildPayload(values, params){
+    var nameParts=splitName(values.full_name);
+    var countryLabel=countryValueForLocation(values.country);
+    var props=cleanObject(contextData(params, countryLabel, values.city));
+    var attrs=cleanObject({email:values.email, first_name:nameParts.first_name, last_name:nameParts.last_name});
+    attrs.location=cleanObject({city:values.city, country:countryLabel});
+    attrs.properties=props;
+    return {data:{type:'subscription',attributes:{profile:{data:{type:'profile',attributes:attrs}}},relationships:{list:{data:{type:'list',id:LIST_ID}}}}};
+  }
+
+  function renderDebug(payload, submitState){
+    var details=$('debug-block');
+    var dbg=new URLSearchParams(location.search).get('debug');
+    if(dbg!=='1'){ details.style.display='none'; details.open=false; }
+    else { details.style.display='block'; details.open=true; }
+    var view={endpoint:API_URL, list_id:LIST_ID, ui_language:currentLang, language_source:langSource, submit:submitState||'idle',
+      profile_preview: payload?payload.data.attributes.profile.data.attributes:null};
+    $('debug-json').textContent=JSON.stringify(view,null,2);
+  }
+
+  async function submitToKlaviyo(payload){
+    var res=await fetch(API_URL,{method:'POST',headers:{'accept':'application/vnd.api+json','content-type':'application/vnd.api+json','revision':REVISION},body:JSON.stringify(payload)});
+    if(res.ok) return {ok:true,status:res.status};
+    var bodyText=''; try{bodyText=await res.text();}catch(e){}
+    return {ok:false,status:res.status,body:bodyText};
+  }
+
+  // ---------- IP geo fallback (only when city/country absent) ----------
+  function applyGeo(geo){
+    if(!params.country && geo.country_code && !$('country').value){
+      var norm=normalizeCountry(geo.country_code);
+      if(norm){ if(!COUNTRY_EN[norm]) buildCountrySelect($('country'), currentLang, norm); $('country').value=norm; }
+    }
+    if(!params.city && geo.city && !$('city').value){ $('city').value=geo.city; }
+    geoInfo={source:geo._source, country_code:geo.country_code||null, city:geo.city||null};
+    // If language was only a default, upgrade it from the detected country.
+    if(langSource==='default' && geo.country_code && COUNTRY_LANG[geo.country_code.toUpperCase()]){
+      setLang(COUNTRY_LANG[geo.country_code.toUpperCase()], 'geo-country');
+    }
+    renderDebug(null,'idle'); postHeight();
+  }
+  function fetchGeo(){
+    fetch('https://ipapi.co/json/').then(function(r){return r.ok?r.json():Promise.reject();})
+      .then(function(d){ if(d&&(d.country_code||d.city)){d._source='ipapi.co';applyGeo(d);} else throw new Error('empty'); })
+      .catch(function(){
+        fetch('https://ipwho.is/').then(function(r){return r.json();})
+          .then(function(d){ if(d&&d.success!==false&&(d.country_code||d.city)){d._source='ipwho.is';applyGeo(d);} })
+          .catch(function(){});
       });
   }
 
-  // ---- iframe height broadcast (lets embedders auto-size the iframe) ----
-  function postHeight() {
-    try {
-      var h = document.documentElement.scrollHeight;
-      if (window.parent && window.parent !== window) {
-        window.parent.postMessage({ type: 'zr-klaviyo-form:height', height: h }, '*');
-      }
-    } catch (e) { /* non-fatal */ }
+  // ---------- iframe height broadcast ----------
+  function postHeight(){
+    try{ var h=document.documentElement.scrollHeight;
+      if(window.parent && window.parent!==window) window.parent.postMessage({type:'zr-klaviyo-form:height',height:h},'*');
+    }catch(e){}
   }
 
+  // ---------- init ----------
   var params = parseParams();
-  var form = document.getElementById('qr-form');
-  var countrySelect = document.getElementById('country');
-  var cityInput = document.getElementById('city');
-  var storeInput = document.getElementById('store-id');
-  var channelInput = document.getElementById('channel');
-  var qrInput = document.getElementById('qr-id');
-  var submitBtn = document.getElementById('submit-btn');
-
   var normalizedCountry = normalizeCountry(params.country);
-  buildCountrySelect(countrySelect, normalizedCountry);
-  cityInput.value = params.city || '';
-  storeInput.value = params.store_id || '';
-  channelInput.value = params.channel || 'qr-code';
-  qrInput.value = params.qr_id || '';
-  renderStorePill(params.store_id, params.channel || 'qr-code');
-  renderDebug(null, 'idle');
 
-  // If the URL didn't supply city/country, infer them from the visitor's IP.
-  if (!params.country || !params.city) fetchGeo();
+  var det = determineLang(params, normalizedCountry);
+  currentLang = det.lang; langSource = det.source;
 
-  form.addEventListener('submit', async function (e) {
+  // language switcher options
+  (function(){
+    var ls=$('lang-select'), html='';
+    SUPPORTED.forEach(function(code){ html += '<option value="'+code+'">'+escapeHtml(LANG_NAMES[code])+'</option>'; });
+    ls.innerHTML=html; ls.value=currentLang;
+    ls.addEventListener('change', function(){
+      try{ localStorage.setItem('zr_lang', ls.value); }catch(e){}
+      setLang(ls.value, 'manual');
+    });
+  })();
+
+  render();
+
+  // prefill from URL params
+  $('city').value = params.city || '';
+  $('store-id').value = params.store_id || '';
+  $('channel').value = params.channel || 'qr-code';
+  $('qr-id').value = params.qr_id || '';
+  if(normalizedCountry){ if(!COUNTRY_EN[normalizedCountry]) buildCountrySelect($('country'), currentLang, normalizedCountry); $('country').value = normalizedCountry; }
+  renderDebug(null,'idle');
+
+  if(!params.country || !params.city) fetchGeo();
+
+  $('qr-form').addEventListener('submit', async function(e){
     e.preventDefault();
     setStatus('', null);
-
-    if (!form.checkValidity()) {
-      setStatus('Please complete all required fields.', 'err');
-      form.reportValidity();
-      return;
-    }
-
-    var values = {
-      full_name: document.getElementById('full-name').value.trim(),
-      email: document.getElementById('email').value.trim(),
-      country: countrySelect.value,
-      city: cityInput.value.trim()
-    };
-
-    var payload = buildPayload(values, params);
-    renderDebug(payload, 'sending');
-    submitBtn.disabled = true;
-    setStatus('Sending…', null);
-
-    try {
-      var result = await submitToKlaviyo(payload);
-      if (result.ok) {
-        setStatus('Thank you — you are subscribed.', 'ok');
-        renderDebug(payload, 'success: HTTP ' + result.status);
-        form.reset();
-      } else {
-        setStatus('Something went wrong (HTTP ' + result.status + '). Please try again.', 'err');
-        renderDebug(payload, 'failed: HTTP ' + result.status);
-      }
-    } catch (err) {
-      setStatus('Network error. Please try again.', 'err');
-      renderDebug(payload, 'failed: network error');
-    } finally {
-      submitBtn.disabled = false;
-      postHeight();
-    }
+    var s = STR[currentLang];
+    if(!this.checkValidity()){ setStatus(s.err_required,'err'); this.reportValidity(); return; }
+    var values={ full_name:$('full-name').value.trim(), email:$('email').value.trim(), country:$('country').value, city:$('city').value.trim() };
+    var payload=buildPayload(values, params);
+    renderDebug(payload,'sending'); $('submit-btn').disabled=true; setStatus(s.sending,null);
+    try{
+      var result=await submitToKlaviyo(payload);
+      if(result.ok){ setStatus(s.success,'ok'); renderDebug(payload,'success: HTTP '+result.status); this.reset(); render(); }
+      else { setStatus(s.err_http,'err'); renderDebug(payload,'failed: HTTP '+result.status); }
+    }catch(err){ setStatus(s.err_net,'err'); renderDebug(payload,'failed: network error'); }
+    finally{ $('submit-btn').disabled=false; postHeight(); }
   });
 
-  // Broadcast height on load, resize, and DOM changes
   window.addEventListener('load', postHeight);
   window.addEventListener('resize', postHeight);
-  if (window.ResizeObserver) {
-    new ResizeObserver(postHeight).observe(document.documentElement);
-  }
+  if(window.ResizeObserver) new ResizeObserver(postHeight).observe(document.documentElement);
   postHeight();
 })();
 </script>
