@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Sign Up — Zielinski & Rozen</title>
+<style>
+  :root{
+    --cream:#F4F0E8;
+    --off:#1B1B1B;
+    --off-soft:#6B7280;
+    --line:rgba(27,27,27,.22);
+    --ok:#0B6B3A;
+    --err:#9B1C1C;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html,body{min-height:100%;background:var(--cream)}
+  body{
+    font-family:var(--sans);
+    color:var(--off);
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    padding:24px 12px;
+  }
+
+  .sheet{
+    width:min(680px,100%);
+    background:var(--cream);
+    border:1px solid var(--line);
+    padding:24px 20px;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+  }
+  .head{display:flex;flex-direction:column;gap:6px}
+  .head h1{font-size:22px;letter-spacing:.04em;font-weight:600;line-height:1.1;text-transform:uppercase}
+  .head .sub{font-size:15px;line-height:1.4;color:var(--off)}
+  .store-pill{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--off-soft)}
+
+  form{display:flex;flex-direction:column;gap:14px}
+  .field{display:flex;flex-direction:column;gap:5px}
+  .field label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--off-soft)}
+  .field input,.field select{
+    width:100%;
+    height:46px;
+    border:1px solid var(--line);
+    background:#fff;
+    color:var(--off);
+    padding:0 12px;
+    font-size:16px;
+    font-family:var(--sans);
+    border-radius:0;
+    appearance:none;
+  }
+  .field input:focus,.field select:focus{outline:none;border-color:var(--off)}
+  .field select{background-image:linear-gradient(45deg,transparent 50%,var(--off) 50%),linear-gradient(135deg,var(--off) 50%,transparent 50%);background-position:calc(100% - 18px) 20px,calc(100% - 12px) 20px;background-size:6px 6px,6px 6px;background-repeat:no-repeat;padding-right:34px}
+
+  .consent{
+    display:flex;
+    gap:9px;
+    align-items:flex-start;
+    margin-top:2px;
+  }
+  .consent input{
+    margin-top:2px;
+    width:16px;
+    height:16px;
+    min-width:16px;
+    border:1px solid var(--line);
+    appearance:none;
+    background:#fff;
+    cursor:pointer;
+  }
+  .consent input:checked{background:var(--off)}
+  .consent .txt{font-size:12px;line-height:1.45;color:var(--off)}
+  .consent a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+
+  button[type="submit"]{
+    border-radius:0;
+    margin-top:4px;
+    height:48px;
+    border:1px solid var(--off);
+    background:var(--off);
+    color:#fff;
+    font-family:var(--sans);
+    font-size:15px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    cursor:pointer;
+  }
+  button[disabled]{opacity:.6;cursor:wait}
+
+  .status{min-height:18px;font-size:12px;color:var(--off-soft)}
+  .status.ok{color:var(--ok)}
+  .status.err{color:var(--err)}
+
+  details.debug{border-top:1px solid var(--line);padding-top:10px}
+  details.debug summary{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--off-soft);cursor:pointer;list-style:none}
+  details.debug summary::-webkit-details-marker{display:none}
+  details.debug pre{
+    margin-top:8px;
+    font-size:11px;
+    line-height:1.45;
+    white-space:pre-wrap;
+    word-break:break-word;
+    color:var(--off-soft);
+    font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+
+  @media (min-width: 768px){
+    body{padding:36px}
+    .sheet{padding:28px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  }
+</style>
+</head>
+<body>
+<main class="sheet" aria-label="signup form">
+  <header class="head">
+    <h1>Sign Up</h1>
+    <p class="sub">Leave your details for updates, events and exhibitions.</p>
+    <p class="store-pill" id="store-pill"></p>
+  </header>
+
+  <form id="qr-form" novalidate>
+    <div class="row">
+      <div class="field">
+        <label for="full-name">Full Name</label>
+        <input id="full-name" name="full_name" type="text" autocomplete="name" placeholder="Your name">
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" required autocomplete="email" placeholder="name@example.com">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="country">Country</label>
+        <select id="country" name="country" required></select>
+      </div>
+      <div class="field">
+        <label for="city">City</label>
+        <input id="city" name="city" type="text" required placeholder="City">
+      </div>
+    </div>
+
+    <input id="store-id" name="store_id" type="hidden">
+    <input id="channel" name="channel" type="hidden">
+    <input id="qr-id" name="qr_id" type="hidden">
+
+    <label class="consent" for="privacy-consent">
+      <input id="privacy-consent" name="privacy_consent" type="checkbox" required>
+      <span class="txt">I have read and agree to the <a href="https://zielinskiandrozen.com/pages/gdpr-privacy-policy" target="_blank" rel="noopener">Privacy Policy</a> <strong>(required)</strong></span>
+    </label>
+
+    <button id="submit-btn" type="submit">Sign Up</button>
+    <p class="status" id="status" aria-live="polite"></p>
+
+    <details class="debug" id="debug-block">
+      <summary>Debug Context</summary>
+      <pre id="debug-json"></pre>
+    </details>
+  </form>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  var COMPANY_ID = 'RNG3Ym';
+  var LIST_ID = 'XfZuXJ';
+  var REVISION = '2025-04-15';
+  var API_URL = 'https://a.klaviyo.com/client/subscriptions/?company_id=' + encodeURIComponent(COMPANY_ID);
+
+  var COUNTRY_OPTIONS = [
+    ['AE', 'United Arab Emirates'], ['AT', 'Austria'], ['BE', 'Belgium'], ['BG', 'Bulgaria'],
+    ['BR', 'Brazil'], ['CH', 'Switzerland'], ['CY', 'Cyprus'], ['CZ', 'Czech Republic'],
+    ['DE', 'Germany'], ['DK', 'Denmark'], ['EE', 'Estonia'], ['ES', 'Spain'],
+    ['FI', 'Finland'], ['FR', 'France'], ['GB', 'United Kingdom'], ['GR', 'Greece'],
+    ['HR', 'Croatia'], ['HU', 'Hungary'], ['IE', 'Ireland'], ['IL', 'Israel'],
+    ['IN', 'India'], ['IT', 'Italy'], ['LT', 'Lithuania'], ['LU', 'Luxembourg'],
+    ['LV', 'Latvia'], ['MT', 'Malta'], ['NL', 'Netherlands'], ['PL', 'Poland'],
+    ['PT', 'Portugal'], ['RO', 'Romania'], ['RS', 'Serbia'], ['SE', 'Sweden'],
+    ['SI', 'Slovenia'], ['SK', 'Slovakia'], ['US', 'United States']
+  ];
+
+  var COUNTRY_BY_CODE = {};
+  COUNTRY_OPTIONS.forEach(function (item) { COUNTRY_BY_CODE[item[0]] = item[1]; });
+
+  function qp(name, sp) {
+    return (sp.get(name) || '').trim();
+  }
+
+  function parseParams() {
+    var sp = new URLSearchParams(window.location.search);
+    return {
+      store_id: qp('store_id', sp) || qp('store', sp) || qp('shop_id', sp) || qp('location_id', sp),
+      city: qp('city', sp),
+      country: qp('country', sp) || qp('country_code', sp),
+      channel: qp('channel', sp) || qp('source', sp) || qp('utm_source', sp) || 'qr-code',
+      qr_id: qp('qr_id', sp) || qp('qr', sp) || qp('code', sp),
+      utm_source: qp('utm_source', sp),
+      utm_medium: qp('utm_medium', sp),
+      utm_campaign: qp('utm_campaign', sp),
+      utm_term: qp('utm_term', sp),
+      utm_content: qp('utm_content', sp)
+    };
+  }
+
+  function normalizeCountry(raw) {
+    if (!raw) return '';
+    var clean = raw.replace(/_/g, ' ').trim();
+    if (clean.length === 2) {
+      var code = clean.toUpperCase();
+      if (COUNTRY_BY_CODE[code]) return code;
+    }
+    var lower = clean.toLowerCase();
+    for (var i = 0; i < COUNTRY_OPTIONS.length; i++) {
+      if (COUNTRY_OPTIONS[i][1].toLowerCase() === lower) return COUNTRY_OPTIONS[i][0];
+    }
+    return clean;
+  }
+
+  function buildCountrySelect(select, normalized) {
+    var html = '<option value="">Select country</option>';
+    COUNTRY_OPTIONS.forEach(function (item) {
+      html += '<option value="' + item[0] + '">' + item[1] + '</option>';
+    });
+    if (normalized && !COUNTRY_BY_CODE[normalized]) {
+      html += '<option value="' + escapeHtml(normalized) + '">' + escapeHtml(normalized) + '</option>';
+    }
+    select.innerHTML = html;
+    if (normalized) select.value = normalized;
+  }
+
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function detectBrowser(ua) {
+    if (/Edg\//.test(ua)) return 'Edge';
+    if (/OPR\//.test(ua)) return 'Opera';
+    if (/Chrome\//.test(ua) && !/Edg\//.test(ua) && !/OPR\//.test(ua)) return 'Chrome';
+    if (/Safari\//.test(ua) && !/Chrome\//.test(ua)) return 'Safari';
+    if (/Firefox\//.test(ua)) return 'Firefox';
+    return 'Unknown';
+  }
+
+  function deviceType(ua) {
+    return /Mobi|Android|iPhone|iPad|iPod/i.test(ua) ? 'mobile' : 'desktop';
+  }
+
+  function splitName(full) {
+    var clean = (full || '').trim();
+    if (!clean) return {};
+    var bits = clean.split(/\s+/);
+    if (bits.length === 1) return { first_name: bits[0] };
+    return { first_name: bits.shift(), last_name: bits.join(' ') };
+  }
+
+  function countryValueForLocation(selectVal) {
+    if (!selectVal) return '';
+    return COUNTRY_BY_CODE[selectVal] || selectVal;
+  }
+
+  function renderStorePill(storeId, channel) {
+    var el = document.getElementById('store-pill');
+    var parts = [];
+    if (storeId) parts.push('STORE: ' + storeId);
+    if (channel) parts.push('CHANNEL: ' + channel);
+    el.textContent = parts.length ? parts.join(' · ') : 'CHANNEL: QR-CODE';
+  }
+
+  function setStatus(text, kind) {
+    var el = document.getElementById('status');
+    el.textContent = text || '';
+    el.classList.remove('ok', 'err');
+    if (kind) el.classList.add(kind);
+  }
+
+  function contextData(params, countryLabel, cityValue) {
+    var ua = navigator.userAgent || '';
+    return {
+      store_id: params.store_id || null,
+      channel: params.channel || 'qr-code',
+      qr_id: params.qr_id || null,
+      browser_name: detectBrowser(ua),
+      browser_language: navigator.language || null,
+      browser_languages: (navigator.languages || []).join(', ') || null,
+      timezone: (Intl.DateTimeFormat().resolvedOptions().timeZone || null),
+      platform: navigator.platform || null,
+      device_type: deviceType(ua),
+      user_agent: ua,
+      screen_resolution: (window.screen.width + 'x' + window.screen.height),
+      viewport: (window.innerWidth + 'x' + window.innerHeight),
+      referrer: document.referrer || null,
+      landing_url: location.href,
+      landing_path: location.pathname,
+      query_string: location.search || null,
+      utm_source: params.utm_source || null,
+      utm_medium: params.utm_medium || null,
+      utm_campaign: params.utm_campaign || null,
+      utm_term: params.utm_term || null,
+      utm_content: params.utm_content || null,
+      city_input: cityValue || null,
+      country_input: countryLabel || null,
+      source: 'in-store-qr-api-form',
+      consent_privacy_policy: true,
+      consent_privacy_policy_at: new Date().toISOString()
+    };
+  }
+
+  function cleanObject(obj) {
+    var out = {};
+    Object.keys(obj).forEach(function (k) {
+      var v = obj[k];
+      if (v !== null && v !== undefined && v !== '') out[k] = v;
+    });
+    return out;
+  }
+
+  function buildPayload(values, params) {
+    var nameParts = splitName(values.full_name);
+    var countryLabel = countryValueForLocation(values.country);
+    var props = cleanObject(contextData(params, countryLabel, values.city));
+
+    var attrs = cleanObject({
+      email: values.email,
+      first_name: nameParts.first_name,
+      last_name: nameParts.last_name
+    });
+    attrs.location = cleanObject({
+      city: values.city,
+      country: countryLabel
+    });
+    attrs.properties = props;
+
+    return {
+      data: {
+        type: 'subscription',
+        attributes: {
+          profile: {
+            data: {
+              type: 'profile',
+              attributes: attrs
+            }
+          }
+        },
+        relationships: {
+          list: { data: { type: 'list', id: LIST_ID } }
+        }
+      }
+    };
+  }
+
+  function renderDebug(payload, submitState) {
+    var details = document.getElementById('debug-block');
+    var debugParam = new URLSearchParams(location.search).get('debug');
+    if (debugParam !== '1') {
+      details.style.display = 'none';
+      details.open = false;
+    } else {
+      details.style.display = 'block';
+      details.open = true;
+    }
+
+    var view = {
+      endpoint: API_URL,
+      list_id: LIST_ID,
+      submit: submitState || 'idle',
+      profile_preview: payload ? payload.data.attributes.profile.data.attributes : null
+    };
+    document.getElementById('debug-json').textContent = JSON.stringify(view, null, 2);
+  }
+
+  async function submitToKlaviyo(payload) {
+    var res = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'accept': 'application/vnd.api+json',
+        'content-type': 'application/vnd.api+json',
+        'revision': REVISION
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (res.ok) return { ok: true, status: res.status };
+    var bodyText = '';
+    try { bodyText = await res.text(); } catch (e) {}
+    return { ok: false, status: res.status, body: bodyText };
+  }
+
+  // ---- iframe height broadcast (lets embedders auto-size the iframe) ----
+  function postHeight() {
+    try {
+      var h = document.documentElement.scrollHeight;
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({ type: 'zr-klaviyo-form:height', height: h }, '*');
+      }
+    } catch (e) { /* non-fatal */ }
+  }
+
+  var params = parseParams();
+  var form = document.getElementById('qr-form');
+  var countrySelect = document.getElementById('country');
+  var cityInput = document.getElementById('city');
+  var storeInput = document.getElementById('store-id');
+  var channelInput = document.getElementById('channel');
+  var qrInput = document.getElementById('qr-id');
+  var submitBtn = document.getElementById('submit-btn');
+
+  var normalizedCountry = normalizeCountry(params.country);
+  buildCountrySelect(countrySelect, normalizedCountry);
+  cityInput.value = params.city || '';
+  storeInput.value = params.store_id || '';
+  channelInput.value = params.channel || 'qr-code';
+  qrInput.value = params.qr_id || '';
+  renderStorePill(params.store_id, params.channel || 'qr-code');
+  renderDebug(null, 'idle');
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    setStatus('', null);
+
+    if (!form.checkValidity()) {
+      setStatus('Please complete all required fields.', 'err');
+      form.reportValidity();
+      return;
+    }
+
+    var values = {
+      full_name: document.getElementById('full-name').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      country: countrySelect.value,
+      city: cityInput.value.trim()
+    };
+
+    var payload = buildPayload(values, params);
+    renderDebug(payload, 'sending');
+    submitBtn.disabled = true;
+    setStatus('Sending…', null);
+
+    try {
+      var result = await submitToKlaviyo(payload);
+      if (result.ok) {
+        setStatus('Thank you — you are subscribed.', 'ok');
+        renderDebug(payload, 'success: HTTP ' + result.status);
+        form.reset();
+      } else {
+        setStatus('Something went wrong (HTTP ' + result.status + '). Please try again.', 'err');
+        renderDebug(payload, 'failed: HTTP ' + result.status);
+      }
+    } catch (err) {
+      setStatus('Network error. Please try again.', 'err');
+      renderDebug(payload, 'failed: network error');
+    } finally {
+      submitBtn.disabled = false;
+      postHeight();
+    }
+  });
+
+  // Broadcast height on load, resize, and DOM changes
+  window.addEventListener('load', postHeight);
+  window.addEventListener('resize', postHeight);
+  if (window.ResizeObserver) {
+    new ResizeObserver(postHeight).observe(document.documentElement);
+  }
+  postHeight();
+})();
+</script>
+</body>
+</html>
