@@ -45,14 +45,31 @@
   .fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}
   .fields label{display:flex;flex-direction:column;gap:5px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--soft)}
   .fields .full{grid-column:1 / -1}
-  h3.cat{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--off);
-    margin:24px 0 12px;padding-top:16px;border-top:1px solid var(--line)}
-  h3.cat:first-child{margin-top:0;padding-top:0;border-top:0}
-  .cat-note{font-size:12px;color:var(--soft);margin:-6px 0 12px}
+  .cat-note{font-size:12px;color:var(--soft);margin:8px 0 16px;max-width:60ch}
   input[type=text]{height:44px;border:1px solid var(--line);background:#fff;color:var(--off);padding:0 12px;font-size:15px;font-family:var(--sans);border-radius:0;width:100%}
   input[type=text]:focus{outline:none;border-color:var(--off)}
+  select{height:44px;border:1px solid var(--line);background:#fff;color:var(--off);padding:0 34px 0 12px;
+    font-size:15px;font-family:var(--sans);border-radius:0;width:100%;appearance:none;cursor:pointer;
+    background-image:linear-gradient(45deg,transparent 50%,var(--off) 50%),linear-gradient(135deg,var(--off) 50%,transparent 50%);
+    background-position:calc(100% - 18px) 19px,calc(100% - 12px) 19px;background-size:6px 6px;background-repeat:no-repeat}
+  select:focus{outline:none;border-color:var(--off)}
 
-  .extra{margin-top:22px}
+  /* collapsible advanced sections */
+  .more{margin-top:18px;display:flex;flex-direction:column;gap:10px}
+  .acc{border:1px solid var(--line);background:#fff}
+  .acc>summary{list-style:none;cursor:pointer;user-select:none;display:flex;align-items:center;gap:10px;
+    padding:14px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--off)}
+  .acc>summary::-webkit-details-marker{display:none}
+  .acc>summary:hover{background:#faf8f1}
+  .acc>summary:focus-visible{outline:2px solid var(--off);outline-offset:-2px}
+  .acc .count{margin-left:auto;min-width:22px;text-align:center;font-size:10px;letter-spacing:.04em;
+    color:var(--off);background:var(--cream);border:1px solid var(--line);border-radius:999px;padding:2px 7px;display:none}
+  .acc .count.on{display:inline-block}
+  .acc .chev{width:13px;height:13px;flex:none;color:var(--soft);transition:transform .2s ease}
+  .acc[open] .chev{transform:rotate(180deg)}
+  .acc[open]>summary{border-bottom:1px solid var(--line)}
+  .acc-body{padding:16px 14px}
+
   .extra-rows{display:flex;flex-direction:column;gap:10px}
   .extra-row{display:grid;grid-template-columns:1fr 1fr 40px;gap:10px;align-items:center}
   .extra-row .rm{height:40px;border:1px solid var(--line);background:#fff;color:var(--soft);cursor:pointer;font-size:18px;line-height:1}
@@ -77,6 +94,39 @@
     font-family:var(--sans);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:0 16px;cursor:pointer}
   .linkrow button.done{background:#0B6B3A;color:#fff}
   .hint{font-size:12px;color:var(--soft);margin-top:8px}
+
+  /* guide sidebar (wiki) */
+  .navbtn{font:inherit;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);
+    background:none;border:0;border-bottom:1px solid transparent;padding:0 0 3px;cursor:pointer}
+  .navbtn:hover{color:var(--off)}
+  .navbtn[aria-expanded="true"]{color:var(--off);border-color:var(--off)}
+  /* open: push the page content aside instead of overlaying it */
+  body{transition:padding-right .28s cubic-bezier(.16,.84,.44,1)}
+  body.guide-open{padding-right:436px}
+  .guide-drawer{position:fixed;top:0;right:0;height:100dvh;width:420px;background:var(--cream);
+    border-left:1px solid var(--line);
+    transform:translateX(100%);transition:transform .28s cubic-bezier(.16,.84,.44,1);z-index:50;
+    display:flex;flex-direction:column}
+  .guide-drawer.open{transform:translateX(0)}
+  .guide-head{display:flex;align-items:center;justify-content:space-between;flex:none;
+    padding:18px 20px;border-bottom:1px solid var(--line);font-family:var(--serif);font-size:18px}
+  .guide-x{font-size:26px;line-height:1;background:none;border:0;color:var(--soft);cursor:pointer;padding:0 4px}
+  .guide-x:hover{color:var(--off)}
+  .guide-body{position:relative;overflow-y:auto;flex:1;padding:4px 20px 48px}
+  .g-sec{padding:15px 0 15px 14px;border-left:3px solid transparent;border-bottom:1px solid var(--line);transition:background .2s,border-color .2s}
+  .g-sec:last-child{border-bottom:0}
+  .g-sec.active{border-left-color:var(--off);background:#fff}
+  .g-sec h3{font-family:var(--serif);font-weight:600;font-size:15px;margin-bottom:6px}
+  .g-sec p{font-size:13.5px;line-height:1.55;color:#3a3a3a;margin-bottom:8px}
+  .g-sec p:last-child{margin-bottom:0}
+  .g-sec code{font-family:var(--mono);font-size:12px;background:#fff;border:1px solid var(--line);padding:1px 5px}
+  @media (max-width:760px){
+    body.guide-open{padding-right:16px}            /* no horizontal push on mobile */
+    .guide-drawer{top:auto;bottom:0;left:0;right:0;width:auto;height:min(64vh,560px);
+      border-left:0;border-top:1px solid var(--line);border-radius:14px 14px 0 0;
+      transform:translateY(100%);box-shadow:0 -16px 44px rgba(27,27,27,.16)}
+    .guide-drawer.open{transform:translateY(0)}
+  }
 </style>
 </head>
 <body>
@@ -84,7 +134,7 @@
   <nav>
     <a href="../">Form</a>
     <a href="./" class="active">QR Generator</a>
-    <a href="../guide/">Guide</a>
+    <button type="button" id="guide-toggle" class="navbtn" aria-expanded="false" aria-controls="guide">Guide</button>
   </nav>
 
   <h1>QR Code Generator</h1>
@@ -92,43 +142,65 @@
 
   <div class="grid">
     <div>
-      <h2>Link parameters</h2>
-      <p class="cat-note">All fields are optional. Whatever you fill in is added to the link and stored with the signup in Klaviyo.</p>
-
-      <h3 class="cat">Store &amp; location</h3>
+      <h2>Store details</h2>
+      <p class="cat-note">Fill in where this QR will live, then download it. Everything is optional — more options below.</p>
       <div class="fields">
-        <label>Store ID<input id="f-store_id" type="text" placeholder="e.g. paris-marais"></label>
-        <label>City<input id="f-city" type="text" placeholder="e.g. Paris"></label>
-        <label class="full">Country<input id="f-country" type="text" placeholder="ISO code or name, e.g. FR"></label>
+        <label>Store ID<input id="f-store_id" type="text" placeholder="e.g. paris-marais" data-guide="store_id"></label>
+        <label>City<input id="f-city" type="text" placeholder="e.g. Paris" data-guide="city"></label>
+        <label class="full">Country<select id="f-country" data-guide="country"></select></label>
       </div>
 
-      <h3 class="cat">Campaign &amp; tracking</h3>
-      <div class="fields">
-        <label>Channel<input id="f-channel" type="text" placeholder="e.g. qrcode" value="qrcode"></label>
-        <label>QR / campaign code<input id="f-qr_id" type="text" placeholder="e.g. summer24"></label>
-        <label>UTM source<input id="f-utm_source" type="text" placeholder="e.g. instagram"></label>
-        <label>UTM medium<input id="f-utm_medium" type="text" placeholder="e.g. qr"></label>
-        <label>UTM campaign<input id="f-utm_campaign" type="text" placeholder="e.g. spring-launch"></label>
-        <label>UTM term<input id="f-utm_term" type="text" placeholder="optional"></label>
-        <label class="full">UTM content<input id="f-utm_content" type="text" placeholder="optional"></label>
-      </div>
+      <div class="more">
+        <details class="acc" data-acc="campaign">
+          <summary>
+            <span>Campaign &amp; tracking</span>
+            <span class="count"></span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          <div class="acc-body">
+            <div class="fields">
+              <label>Channel<input id="f-channel" type="text" placeholder="e.g. qrcode" value="qrcode" data-guide="channel"></label>
+              <label>QR / campaign code<input id="f-qr_id" type="text" placeholder="e.g. summer24" data-guide="qr_id"></label>
+              <label>UTM source<input id="f-utm_source" type="text" placeholder="e.g. instagram" data-guide="utm"></label>
+              <label>UTM medium<input id="f-utm_medium" type="text" placeholder="e.g. qr" data-guide="utm"></label>
+              <label>UTM campaign<input id="f-utm_campaign" type="text" placeholder="e.g. spring-launch" data-guide="utm"></label>
+              <label>UTM term<input id="f-utm_term" type="text" placeholder="optional" data-guide="utm"></label>
+              <label class="full">UTM content<input id="f-utm_content" type="text" placeholder="optional" data-guide="utm"></label>
+            </div>
+          </div>
+        </details>
 
-      <h3 class="cat">Display</h3>
-      <div class="fields">
-        <label class="full">Language (optional, otherwise auto-detected)<input id="f-lang" type="text" placeholder="e.g. fr — leave blank for auto"></label>
-      </div>
+        <details class="acc" data-acc="display">
+          <summary>
+            <span>Language</span>
+            <span class="count"></span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          <div class="acc-body">
+            <div class="fields">
+              <label class="full">Starting language (leave blank to auto-detect)<input id="f-lang" type="text" placeholder="e.g. fr" data-guide="lang"></label>
+            </div>
+          </div>
+        </details>
 
-      <div class="extra">
-        <h3 class="cat">Custom parameters</h3>
-        <p class="cat-note">Anything else you want stored with the signup — add your own key / value pairs.</p>
-        <div class="extra-rows" id="extra-rows"></div>
-        <button class="add-btn" id="add-row" type="button">+ Add parameter</button>
+        <details class="acc" data-acc="custom">
+          <summary>
+            <span>Custom parameters</span>
+            <span class="count"></span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          <div class="acc-body">
+            <p class="cat-note" style="margin-top:0">Anything else you want stored with the signup — your own key / value pairs.</p>
+            <div class="extra-rows" id="extra-rows"></div>
+            <button class="add-btn" id="add-row" type="button">+ Add parameter</button>
+          </div>
+        </details>
       </div>
 
       <div class="linkbox">
         <h2>Form link</h2>
         <div class="linkrow">
-          <input id="form-url" type="text" readonly>
+          <input id="form-url" type="text" readonly data-guide="link">
           <button id="copy-url" type="button">Copy</button>
         </div>
         <p class="hint">This is the URL the QR code points to. Scanning it opens the signup form with these parameters prefilled.</p>
@@ -147,6 +219,57 @@
   </div>
 </div>
 
+<aside class="guide-drawer" id="guide" aria-hidden="true" aria-label="Guide">
+  <div class="guide-head">
+    <span>Guide</span>
+    <button type="button" id="guide-close" class="guide-x" aria-label="Close guide">×</button>
+  </div>
+  <div class="guide-body">
+    <section class="g-sec" id="g-intro">
+      <h3>How this works</h3>
+      <p>Fill in the fields, and this tool builds a link to the signup form and turns it into a QR code. Every value you enter is added to the link — when someone scans the code and signs up, those values are saved with their profile in Klaviyo, so you know where each signup came from.</p>
+      <p>Tip: with this guide open, clicking any field scrolls here to its explanation.</p>
+    </section>
+    <section class="g-sec" id="g-store_id">
+      <h3>Store ID</h3>
+      <p>A short identifier for the specific store or location this QR lives in — e.g. <code>paris-marais</code>. Saved with the signup as <code>store_id</code>, so you can tell which branch drove each subscriber.</p>
+    </section>
+    <section class="g-sec" id="g-city">
+      <h3>City</h3>
+      <p>Pre-fills the City field on the form so visitors don't have to type it. They can still change it before submitting.</p>
+    </section>
+    <section class="g-sec" id="g-country">
+      <h3>Country</h3>
+      <p>Pre-fills the Country field. Pick from the standard list — the value travels in the link as an ISO code (e.g. <code>FR</code>) and is shown to the visitor translated into their own language. Leave it empty to let the form auto-detect.</p>
+    </section>
+    <section class="g-sec" id="g-channel">
+      <h3>Channel</h3>
+      <p>Where this code appears — e.g. <code>qrcode</code>, <code>poster</code>, <code>receipt</code>. Defaults to <code>qrcode</code>. Saved as <code>channel</code>.</p>
+    </section>
+    <section class="g-sec" id="g-qr_id">
+      <h3>QR / campaign code</h3>
+      <p>A code for this specific QR or campaign — e.g. <code>summer24</code>. Use a unique value per printed code to track each one separately. Saved as <code>qr_id</code>.</p>
+    </section>
+    <section class="g-sec" id="g-utm">
+      <h3>UTM parameters</h3>
+      <p>Standard marketing tags, stored with the signup and recognised by analytics tools:</p>
+      <p><code>utm_source</code> — where (e.g. instagram) · <code>utm_medium</code> — type (e.g. qr) · <code>utm_campaign</code> — the campaign name · <code>utm_term</code> / <code>utm_content</code> — optional extras.</p>
+    </section>
+    <section class="g-sec" id="g-lang">
+      <h3>Starting language</h3>
+      <p>Forces the form to open in a specific language — e.g. <code>fr</code>, <code>es</code>, <code>ar</code>. Leave blank to auto-detect from the visitor's browser and location.</p>
+    </section>
+    <section class="g-sec" id="g-custom">
+      <h3>Custom parameters</h3>
+      <p>Add any other key / value pairs you want stored with the signup. The key becomes a custom property on the Klaviyo profile — useful for one-off tags this form doesn't cover.</p>
+    </section>
+    <section class="g-sec" id="g-link">
+      <h3>The link &amp; QR code</h3>
+      <p>The form link updates live as you type. Copy it, or download the QR as <strong>SVG</strong> (best for print) or <strong>PNG</strong>. <em>Open form ↗</em> previews exactly what a visitor sees when they scan.</p>
+    </section>
+  </div>
+</aside>
+
 <script src="../lib/qrcode-generator.js"></script>
 <script>
 (function(){
@@ -155,14 +278,62 @@
   var BASE_FIELDS = ['store_id','city','country','channel','qr_id','utm_source','utm_medium','utm_campaign','utm_term','utm_content','lang'];
   var $ = function(id){return document.getElementById(id);};
 
+  // Country dropdown (same list the signup form supports; value = ISO code).
+  var COUNTRY_EN = {
+    AD:"Andorra", AE:"United Arab Emirates", AF:"Afghanistan", AG:"Antigua & Barbuda", AI:"Anguilla", AL:"Albania", AM:"Armenia",
+    AO:"Angola", AR:"Argentina", AS:"American Samoa", AT:"Austria", AU:"Australia", AW:"Aruba", AX:"Åland Islands",
+    AZ:"Azerbaijan", BA:"Bosnia & Herzegovina", BB:"Barbados", BD:"Bangladesh", BE:"Belgium", BF:"Burkina Faso", BG:"Bulgaria",
+    BH:"Bahrain", BI:"Burundi", BJ:"Benin", BL:"St. Barthélemy", BM:"Bermuda", BN:"Brunei", BO:"Bolivia",
+    BQ:"Caribbean Netherlands", BR:"Brazil", BS:"Bahamas", BT:"Bhutan", BW:"Botswana", BY:"Belarus", BZ:"Belize",
+    CA:"Canada", CD:"Congo - Kinshasa", CF:"Central African Republic", CG:"Congo - Brazzaville", CH:"Switzerland", CI:"Côte d’Ivoire", CK:"Cook Islands",
+    CL:"Chile", CM:"Cameroon", CN:"China", CO:"Colombia", CR:"Costa Rica", CU:"Cuba", CV:"Cape Verde",
+    CW:"Curaçao", CY:"Cyprus", CZ:"Czechia", DE:"Germany", DJ:"Djibouti", DK:"Denmark", DM:"Dominica",
+    DO:"Dominican Republic", DZ:"Algeria", EC:"Ecuador", EE:"Estonia", EG:"Egypt", EH:"Western Sahara", ER:"Eritrea",
+    ES:"Spain", ET:"Ethiopia", FI:"Finland", FJ:"Fiji", FK:"Falkland Islands", FM:"Micronesia", FO:"Faroe Islands",
+    FR:"France", GA:"Gabon", GB:"United Kingdom", GD:"Grenada", GE:"Georgia", GF:"French Guiana", GG:"Guernsey",
+    GH:"Ghana", GI:"Gibraltar", GL:"Greenland", GM:"Gambia", GN:"Guinea", GP:"Guadeloupe", GQ:"Equatorial Guinea",
+    GR:"Greece", GT:"Guatemala", GU:"Guam", GW:"Guinea-Bissau", GY:"Guyana", HK:"Hong Kong SAR China", HN:"Honduras",
+    HR:"Croatia", HT:"Haiti", HU:"Hungary", ID:"Indonesia", IE:"Ireland", IL:"Israel", IM:"Isle of Man",
+    IN:"India", IQ:"Iraq", IR:"Iran", IS:"Iceland", IT:"Italy", JE:"Jersey", JM:"Jamaica",
+    JO:"Jordan", JP:"Japan", KE:"Kenya", KG:"Kyrgyzstan", KH:"Cambodia", KI:"Kiribati", KM:"Comoros",
+    KN:"St. Kitts & Nevis", KP:"North Korea", KR:"South Korea", KW:"Kuwait", KY:"Cayman Islands", KZ:"Kazakhstan", LA:"Laos",
+    LB:"Lebanon", LC:"St. Lucia", LI:"Liechtenstein", LK:"Sri Lanka", LR:"Liberia", LS:"Lesotho", LT:"Lithuania",
+    LU:"Luxembourg", LV:"Latvia", LY:"Libya", MA:"Morocco", MC:"Monaco", MD:"Moldova", ME:"Montenegro",
+    MF:"St. Martin", MG:"Madagascar", MH:"Marshall Islands", MK:"North Macedonia", ML:"Mali", MM:"Myanmar (Burma)", MN:"Mongolia",
+    MO:"Macao SAR China", MP:"Northern Mariana Islands", MQ:"Martinique", MR:"Mauritania", MS:"Montserrat", MT:"Malta", MU:"Mauritius",
+    MV:"Maldives", MW:"Malawi", MX:"Mexico", MY:"Malaysia", MZ:"Mozambique", NA:"Namibia", NC:"New Caledonia",
+    NE:"Niger", NG:"Nigeria", NI:"Nicaragua", NL:"Netherlands", NO:"Norway", NP:"Nepal", NR:"Nauru",
+    NU:"Niue", NZ:"New Zealand", OM:"Oman", PA:"Panama", PE:"Peru", PF:"French Polynesia", PG:"Papua New Guinea",
+    PH:"Philippines", PK:"Pakistan", PL:"Poland", PM:"St. Pierre & Miquelon", PR:"Puerto Rico", PS:"Palestinian Territories", PT:"Portugal",
+    PW:"Palau", PY:"Paraguay", QA:"Qatar", RE:"Réunion", RO:"Romania", RS:"Serbia", RU:"Russia",
+    RW:"Rwanda", SA:"Saudi Arabia", SB:"Solomon Islands", SC:"Seychelles", SD:"Sudan", SE:"Sweden", SG:"Singapore",
+    SH:"St. Helena", SI:"Slovenia", SJ:"Svalbard & Jan Mayen", SK:"Slovakia", SL:"Sierra Leone", SM:"San Marino", SN:"Senegal",
+    SO:"Somalia", SR:"Suriname", SS:"South Sudan", ST:"São Tomé & Príncipe", SV:"El Salvador", SX:"Sint Maarten", SY:"Syria",
+    SZ:"Eswatini", TC:"Turks & Caicos Islands", TD:"Chad", TG:"Togo", TH:"Thailand", TJ:"Tajikistan", TK:"Tokelau",
+    TL:"Timor-Leste", TM:"Turkmenistan", TN:"Tunisia", TO:"Tonga", TR:"Türkiye", TT:"Trinidad & Tobago", TV:"Tuvalu",
+    TW:"Taiwan", TZ:"Tanzania", UA:"Ukraine", UG:"Uganda", US:"United States", UY:"Uruguay", UZ:"Uzbekistan",
+    VA:"Vatican City", VC:"St. Vincent & Grenadines", VE:"Venezuela", VG:"British Virgin Islands", VI:"U.S. Virgin Islands", VN:"Vietnam", VU:"Vanuatu",
+    WF:"Wallis & Futuna", WS:"Samoa", XK:"Kosovo", YE:"Yemen", YT:"Mayotte", ZA:"South Africa", ZM:"Zambia",
+    ZW:"Zimbabwe"
+  };
+  (function buildCountrySelect(){
+    var sel=$('f-country');
+    var rows=Object.keys(COUNTRY_EN).map(function(c){return [c, COUNTRY_EN[c]];})
+      .sort(function(a,b){ return a[1]<b[1]?-1:1; });
+    var html='<option value=""></option>';
+    rows.forEach(function(r){ html+='<option value="'+r[0]+'">'+r[1]+' ('+r[0]+')</option>'; });
+    sel.innerHTML=html;
+  })();
+
   // Prefill from this page's own URL.
   var sp = new URLSearchParams(location.search);
   BASE_FIELDS.forEach(function(k){ var v=sp.get(k); if(v && $('f-'+k)) $('f-'+k).value=v; });
+  $('f-country').addEventListener('change', refresh);
 
   // ---- additional param rows ----
   function addRow(k, v){
     var row=document.createElement('div'); row.className='extra-row';
-    row.innerHTML='<input type="text" class="ek" placeholder="parameter"><input type="text" class="ev" placeholder="value"><button type="button" class="rm" title="Remove">×</button>';
+    row.innerHTML='<input type="text" class="ek" placeholder="parameter" data-guide="custom"><input type="text" class="ev" placeholder="value" data-guide="custom"><button type="button" class="rm" title="Remove">×</button>';
     $('extra-rows').appendChild(row);
     if(k!=null) row.querySelector('.ek').value=k;
     if(v!=null) row.querySelector('.ev').value=v;
@@ -198,11 +369,29 @@
     return el;
   }
 
+  // How many params a section actually contributes (non-empty & not just the
+  // default value) — shown as a badge so collapsed sections still reveal content.
+  function sectionCount(acc){
+    if(acc.dataset.acc==='custom'){
+      return Array.prototype.filter.call(acc.querySelectorAll('.extra-row'),
+        function(r){ return r.querySelector('.ek').value.trim()!==''; }).length;
+    }
+    return Array.prototype.filter.call(acc.querySelectorAll('input[type=text]'),
+      function(i){ return i.value.trim()!=='' && i.value!==i.defaultValue; }).length;
+  }
+  function updateCounts(){
+    document.querySelectorAll('details.acc').forEach(function(acc){
+      var n=sectionCount(acc), c=acc.querySelector('.count');
+      if(n>0){ c.textContent=n; c.classList.add('on'); } else { c.textContent=''; c.classList.remove('on'); }
+    });
+  }
+
   function refresh(){
     var url=formUrl();
     $('form-url').value=url;
     $('open-form').href=url;
     renderQR(url);
+    updateCounts();
   }
 
   BASE_FIELDS.forEach(function(k){ $('f-'+k).addEventListener('input', refresh); });
@@ -245,6 +434,29 @@
       c.toBlob(function(blob){ if(blob) download(blob, slug()+'.png'); }, 'image/png');
     };
     img.src=url;
+  });
+
+  // ---- guide sidebar (wiki) ----
+  var drawer=$('guide'), gToggle=$('guide-toggle'), gBody=drawer.querySelector('.guide-body');
+  function openGuide(){ drawer.classList.add('open'); document.body.classList.add('guide-open');
+    gToggle.setAttribute('aria-expanded','true'); drawer.setAttribute('aria-hidden','false'); }
+  function closeGuide(){ drawer.classList.remove('open'); document.body.classList.remove('guide-open');
+    gToggle.setAttribute('aria-expanded','false'); drawer.setAttribute('aria-hidden','true'); }
+  gToggle.addEventListener('click', function(){ drawer.classList.contains('open')?closeGuide():openGuide(); });
+  $('guide-close').addEventListener('click', closeGuide);
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape' && drawer.classList.contains('open')) closeGuide(); });
+
+  function highlightGuide(key){
+    var sec=document.getElementById('g-'+key); if(!sec) return;
+    var prev=gBody.querySelector('.g-sec.active'); if(prev) prev.classList.remove('active');
+    sec.classList.add('active');
+    gBody.scrollTo({ top: sec.offsetTop - 6, behavior:'smooth' });
+  }
+  // While the guide is open, focusing a field scrolls the wiki to its section.
+  document.addEventListener('focusin', function(e){
+    if(!drawer.classList.contains('open')) return;
+    var el=e.target.closest('[data-guide]'); if(!el) return;
+    highlightGuide(el.getAttribute('data-guide'));
   });
 
   refresh();
