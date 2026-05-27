@@ -18,18 +18,42 @@
 <meta property="og:image" content="https://form.zielinskiandrozen.com/favicon.png">
 <meta name="twitter:card" content="summary">
 <style>
+  /* Self-hosted free fonts (SIL OFL). Non-Latin scripts fall back to the system stack. */
+  /* Body — Nunito Sans (closest free match to the main site's Circe) */
+  @font-face{
+    font-family:'Nunito Sans';font-weight:400;font-style:normal;font-display:swap;
+    src:url('/fonts/NunitoSans-400-latin.woff2') format('woff2');
+    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  }
+  @font-face{
+    font-family:'Nunito Sans';font-weight:400;font-style:normal;font-display:swap;
+    src:url('/fonts/NunitoSans-400-latinext.woff2') format('woff2');
+    unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+  }
+  /* Headings — Zilla Slab (free slab serif, stands in for Circe Slab) */
+  @font-face{
+    font-family:'Zilla Slab';font-weight:600;font-style:normal;font-display:swap;
+    src:url('/fonts/ZillaSlab-600-latin.woff2') format('woff2');
+    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  }
+  @font-face{
+    font-family:'Zilla Slab';font-weight:600;font-style:normal;font-display:swap;
+    src:url('/fonts/ZillaSlab-600-latinext.woff2') format('woff2');
+    unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+  }
   :root{
-    --cream:#F4F0E8;
+    --cream:#F4F0E8;          /* form sheet (paper) */
+    --bg:#E9E3D6;             /* page behind the sheet — a touch darker */
     --off:#1B1B1B;
     --off-soft:#6B7280;
     --line:rgba(27,27,27,.22);
     --ok:#0B6B3A;
     --err:#9B1C1C;
-    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
-    --serif:Georgia,"Times New Roman",serif;
+    --sans:'Nunito Sans',-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    --serif:'Zilla Slab',Georgia,"Times New Roman",serif;
   }
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  html,body{min-height:100%;background:var(--cream)}
+  html,body{min-height:100%;background:var(--bg)}
   body{
     font-family:var(--sans);
     color:var(--off);
@@ -49,7 +73,9 @@
 
   .sheet{
     width:min(640px,100%);
-    background:var(--cream);
+    background-color:var(--cream);
+    /* very subtle paper / concrete grain */
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
     border:1px solid var(--line);
     padding:30px 24px 22px;
     display:flex;
@@ -72,7 +98,7 @@
   .head h1{
     font-family:var(--serif);
     font-size:27px;
-    font-weight:400;
+    font-weight:600;
     line-height:1.15;
     letter-spacing:.01em;
   }
@@ -114,9 +140,19 @@
     margin-top:2px;width:16px;height:16px;min-width:16px;
     border:1px solid var(--line);appearance:none;background:#fff;cursor:pointer;
   }
-  .consent input:checked{background:var(--off)}
+  /* checked: keep the box white, draw a black check inside */
+  .consent input:checked{
+    border-color:var(--off);
+    background-color:#fff;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='%231B1B1B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:center;background-size:12px 12px;
+  }
+  .consent input:focus-visible{outline:2px solid var(--off);outline-offset:2px}
   .consent .txt{font-size:12px;line-height:1.5;color:var(--off)}
   .consent a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+
+  /* anti-spam honeypot — hidden from people, bots tend to fill it */
+  .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 
   button[type="submit"]{
     border-radius:0;margin-top:4px;height:50px;
@@ -173,11 +209,11 @@
     <div class="row">
       <div class="field">
         <label for="full-name" id="t-name"></label>
-        <input id="full-name" name="full_name" type="text" autocomplete="name">
+        <input id="full-name" name="full_name" type="text" autocomplete="name" maxlength="80">
       </div>
       <div class="field">
         <label for="email" id="t-email"></label>
-        <input id="email" name="email" type="email" required autocomplete="email" placeholder="name@example.com">
+        <input id="email" name="email" type="email" required autocomplete="email" maxlength="254" inputmode="email" autocapitalize="off" spellcheck="false" placeholder="name@example.com">
       </div>
     </div>
 
@@ -188,13 +224,18 @@
       </div>
       <div class="field">
         <label for="city" id="t-city"></label>
-        <input id="city" name="city" type="text" required>
+        <input id="city" name="city" type="text" required maxlength="80">
       </div>
     </div>
 
     <input id="store-id" name="store_id" type="hidden">
     <input id="channel" name="channel" type="hidden">
     <input id="qr-id" name="qr_id" type="hidden">
+
+    <!-- honeypot: must stay empty; hidden from real users -->
+    <div class="hp" aria-hidden="true">
+      <label>Company<input id="hp-company" name="company" type="text" tabindex="-1" autocomplete="off"></label>
+    </div>
 
     <label class="consent" for="privacy-consent">
       <input id="privacy-consent" name="privacy_consent" type="checkbox" required>
@@ -241,17 +282,17 @@
   var DN_LOCALE = { en:'en', he:'he', ar:'ar', fr:'fr', es:'es', de:'de', it:'it', pt:'pt-BR', ru:'ru', hi:'hi', zh:'zh-Hans' };
 
   var STR = {
-    en:{title:"Be the First to Know",subtitle:"Sign up for exclusive offers and early access to new fragrances and art.",name:"Full Name",email:"Email",country:"Country",city:"City",name_ph:"Your name",city_ph:"City",select_country:"Select country",c_pre:"I have read and agree to the ",privacy:"Privacy Policy",c_post:" (required)",button:"Sign Up",sending:"Sending…",success:"Thank you — you're on the list.",err_http:"Something went wrong. Please try again.",err_net:"Network error. Please try again.",err_required:"Please complete all required fields.",lang_label:"Language"},
-    he:{title:"להיות הראשונים לדעת",subtitle:"הירשמו למבצעים בלעדיים וגישה מוקדמת לבשמים ולאמנות חדשים.",name:"שם מלא",email:"אימייל",country:"מדינה",city:"עיר",name_ph:"השם שלך",city_ph:"עיר",select_country:"בחרו מדינה",c_pre:"קראתי ואני מסכים/ה ל",privacy:"מדיניות הפרטיות",c_post:" (חובה)",button:"הרשמה",sending:"שולח…",success:"תודה — נרשמת בהצלחה.",err_http:"משהו השתבש. נסו שוב.",err_net:"שגיאת רשת. נסו שוב.",err_required:"אנא מלאו את כל שדות החובה.",lang_label:"שפה"},
-    ar:{title:"كن أول من يعرف",subtitle:"اشترك للحصول على عروض حصرية ووصول مبكر إلى عطور وأعمال فنية جديدة.",name:"الاسم الكامل",email:"البريد الإلكتروني",country:"الدولة",city:"المدينة",name_ph:"اسمك",city_ph:"المدينة",select_country:"اختر الدولة",c_pre:"لقد قرأت وأوافق على ",privacy:"سياسة الخصوصية",c_post:" (مطلوب)",button:"اشتراك",sending:"جارٍ الإرسال…",success:"شكرًا لك — تم تسجيلك.",err_http:"حدث خطأ ما. حاول مرة أخرى.",err_net:"خطأ في الشبكة. حاول مرة أخرى.",err_required:"يرجى إكمال جميع الحقول المطلوبة.",lang_label:"اللغة"},
-    fr:{title:"Soyez les premiers informés",subtitle:"Inscrivez-vous pour des offres exclusives et un accès anticipé aux nouveaux parfums et œuvres d'art.",name:"Nom complet",email:"E-mail",country:"Pays",city:"Ville",name_ph:"Votre nom",city_ph:"Ville",select_country:"Choisissez un pays",c_pre:"J'ai lu et j'accepte la ",privacy:"Politique de confidentialité",c_post:" (obligatoire)",button:"S'inscrire",sending:"Envoi…",success:"Merci — vous êtes inscrit.",err_http:"Une erreur s'est produite. Veuillez réessayer.",err_net:"Erreur réseau. Veuillez réessayer.",err_required:"Veuillez remplir tous les champs obligatoires.",lang_label:"Langue"},
-    es:{title:"Sé el primero en saberlo",subtitle:"Suscríbete para recibir ofertas exclusivas y acceso anticipado a nuevas fragancias y arte.",name:"Nombre completo",email:"Correo electrónico",country:"País",city:"Ciudad",name_ph:"Tu nombre",city_ph:"Ciudad",select_country:"Selecciona un país",c_pre:"He leído y acepto la ",privacy:"Política de Privacidad",c_post:" (obligatorio)",button:"Suscribirse",sending:"Enviando…",success:"Gracias — ya estás en la lista.",err_http:"Algo salió mal. Inténtalo de nuevo.",err_net:"Error de red. Inténtalo de nuevo.",err_required:"Completa todos los campos obligatorios.",lang_label:"Idioma"},
-    de:{title:"Erfahren Sie es als Erste",subtitle:"Melden Sie sich an für exklusive Angebote und frühen Zugang zu neuen Düften und Kunst.",name:"Vollständiger Name",email:"E-Mail",country:"Land",city:"Stadt",name_ph:"Ihr Name",city_ph:"Stadt",select_country:"Land auswählen",c_pre:"Ich habe die ",privacy:"Datenschutzrichtlinie",c_post:" gelesen und stimme zu (erforderlich)",button:"Anmelden",sending:"Senden…",success:"Danke — Sie sind dabei.",err_http:"Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",err_net:"Netzwerkfehler. Bitte versuchen Sie es erneut.",err_required:"Bitte füllen Sie alle Pflichtfelder aus.",lang_label:"Sprache"},
-    it:{title:"Sii il primo a saperlo",subtitle:"Iscriviti per offerte esclusive e accesso anticipato a nuove fragranze e arte.",name:"Nome completo",email:"E-mail",country:"Paese",city:"Città",name_ph:"Il tuo nome",city_ph:"Città",select_country:"Seleziona un paese",c_pre:"Ho letto e accetto l'",privacy:"Informativa sulla privacy",c_post:" (obbligatorio)",button:"Iscriviti",sending:"Invio…",success:"Grazie — sei iscritto.",err_http:"Qualcosa è andato storto. Riprova.",err_net:"Errore di rete. Riprova.",err_required:"Compila tutti i campi obbligatori.",lang_label:"Lingua"},
-    pt:{title:"Seja o primeiro a saber",subtitle:"Inscreva-se para ofertas exclusivas e acesso antecipado a novas fragrâncias e arte.",name:"Nome completo",email:"E-mail",country:"País",city:"Cidade",name_ph:"Seu nome",city_ph:"Cidade",select_country:"Selecione um país",c_pre:"Li e concordo com a ",privacy:"Política de Privacidade",c_post:" (obrigatório)",button:"Inscrever-se",sending:"Enviando…",success:"Obrigado — você está na lista.",err_http:"Algo deu errado. Tente novamente.",err_net:"Erro de rede. Tente novamente.",err_required:"Preencha todos os campos obrigatórios.",lang_label:"Idioma"},
-    ru:{title:"Узнайте первыми",subtitle:"Подпишитесь, чтобы получать эксклюзивные предложения и ранний доступ к новым ароматам и искусству.",name:"Полное имя",email:"Электронная почта",country:"Страна",city:"Город",name_ph:"Ваше имя",city_ph:"Город",select_country:"Выберите страну",c_pre:"Я прочитал(а) и согласен(на) с ",privacy:"Политикой конфиденциальности",c_post:" (обязательно)",button:"Подписаться",sending:"Отправка…",success:"Спасибо — вы подписаны.",err_http:"Что-то пошло не так. Попробуйте ещё раз.",err_net:"Ошибка сети. Попробуйте ещё раз.",err_required:"Пожалуйста, заполните все обязательные поля.",lang_label:"Язык"},
-    hi:{title:"सबसे पहले जानें",subtitle:"विशेष ऑफ़र और नई खुशबुओं व कला तक जल्दी पहुंच के लिए साइन अप करें।",name:"पूरा नाम",email:"ईमेल",country:"देश",city:"शहर",name_ph:"आपका नाम",city_ph:"शहर",select_country:"देश चुनें",c_pre:"मैंने ",privacy:"गोपनीयता नीति",c_post:" पढ़ ली है और सहमत हूं (आवश्यक)",button:"साइन अप करें",sending:"भेजा जा रहा है…",success:"धन्यवाद — आप सूची में शामिल हैं।",err_http:"कुछ गलत हो गया। कृपया पुनः प्रयास करें।",err_net:"नेटवर्क त्रुटि। कृपया पुनः प्रयास करें।",err_required:"कृपया सभी आवश्यक फ़ील्ड भरें।",lang_label:"भाषा"},
-    zh:{title:"抢先知道",subtitle:"注册以获取专属优惠，并抢先了解全新香氛与艺术。",name:"全名",email:"电子邮箱",country:"国家/地区",city:"城市",name_ph:"您的姓名",city_ph:"城市",select_country:"选择国家/地区",c_pre:"我已阅读并同意",privacy:"隐私政策",c_post:"（必填）",button:"注册",sending:"发送中…",success:"谢谢 — 您已成功注册。",err_http:"出错了，请重试。",err_net:"网络错误，请重试。",err_required:"请填写所有必填字段。",lang_label:"语言"}
+    en:{title:"Be the First to Know",subtitle:"Sign up for exclusive offers and early access to new fragrances and art.",name:"Full Name",email:"Email",country:"Country",city:"City",name_ph:"Your name",city_ph:"City",select_country:"Select country",c_pre:"I have read and agree to the ",privacy:"Privacy Policy",c_post:" (required)",button:"Sign Up",sending:"Sending…",success:"Thank you — you're on the list.",err_http:"Something went wrong. Please try again.",err_net:"Network error. Please try again.",err_required:"Please complete all required fields.",err_email:"Please enter a valid email address.",lang_label:"Language"},
+    he:{title:"להיות הראשונים לדעת",subtitle:"הירשמו למבצעים בלעדיים וגישה מוקדמת לבשמים ולאמנות חדשים.",name:"שם מלא",email:"אימייל",country:"מדינה",city:"עיר",name_ph:"השם שלך",city_ph:"עיר",select_country:"בחרו מדינה",c_pre:"קראתי ואני מסכים/ה ל",privacy:"מדיניות הפרטיות",c_post:" (חובה)",button:"הרשמה",sending:"שולח…",success:"תודה — נרשמת בהצלחה.",err_http:"משהו השתבש. נסו שוב.",err_net:"שגיאת רשת. נסו שוב.",err_required:"אנא מלאו את כל שדות החובה.",err_email:"אנא הזינו כתובת אימייל תקינה.",lang_label:"שפה"},
+    ar:{title:"كن أول من يعرف",subtitle:"اشترك للحصول على عروض حصرية ووصول مبكر إلى عطور وأعمال فنية جديدة.",name:"الاسم الكامل",email:"البريد الإلكتروني",country:"الدولة",city:"المدينة",name_ph:"اسمك",city_ph:"المدينة",select_country:"اختر الدولة",c_pre:"لقد قرأت وأوافق على ",privacy:"سياسة الخصوصية",c_post:" (مطلوب)",button:"اشتراك",sending:"جارٍ الإرسال…",success:"شكرًا لك — تم تسجيلك.",err_http:"حدث خطأ ما. حاول مرة أخرى.",err_net:"خطأ في الشبكة. حاول مرة أخرى.",err_required:"يرجى إكمال جميع الحقول المطلوبة.",err_email:"يرجى إدخال عنوان بريد إلكتروني صالح.",lang_label:"اللغة"},
+    fr:{title:"Soyez les premiers informés",subtitle:"Inscrivez-vous pour des offres exclusives et un accès anticipé aux nouveaux parfums et œuvres d'art.",name:"Nom complet",email:"E-mail",country:"Pays",city:"Ville",name_ph:"Votre nom",city_ph:"Ville",select_country:"Choisissez un pays",c_pre:"J'ai lu et j'accepte la ",privacy:"Politique de confidentialité",c_post:" (obligatoire)",button:"S'inscrire",sending:"Envoi…",success:"Merci — vous êtes inscrit.",err_http:"Une erreur s'est produite. Veuillez réessayer.",err_net:"Erreur réseau. Veuillez réessayer.",err_required:"Veuillez remplir tous les champs obligatoires.",err_email:"Veuillez saisir une adresse e-mail valide.",lang_label:"Langue"},
+    es:{title:"Sé el primero en saberlo",subtitle:"Suscríbete para recibir ofertas exclusivas y acceso anticipado a nuevas fragancias y arte.",name:"Nombre completo",email:"Correo electrónico",country:"País",city:"Ciudad",name_ph:"Tu nombre",city_ph:"Ciudad",select_country:"Selecciona un país",c_pre:"He leído y acepto la ",privacy:"Política de Privacidad",c_post:" (obligatorio)",button:"Suscribirse",sending:"Enviando…",success:"Gracias — ya estás en la lista.",err_http:"Algo salió mal. Inténtalo de nuevo.",err_net:"Error de red. Inténtalo de nuevo.",err_required:"Completa todos los campos obligatorios.",err_email:"Introduce una dirección de correo electrónico válida.",lang_label:"Idioma"},
+    de:{title:"Erfahren Sie es als Erste",subtitle:"Melden Sie sich an für exklusive Angebote und frühen Zugang zu neuen Düften und Kunst.",name:"Vollständiger Name",email:"E-Mail",country:"Land",city:"Stadt",name_ph:"Ihr Name",city_ph:"Stadt",select_country:"Land auswählen",c_pre:"Ich habe die ",privacy:"Datenschutzrichtlinie",c_post:" gelesen und stimme zu (erforderlich)",button:"Anmelden",sending:"Senden…",success:"Danke — Sie sind dabei.",err_http:"Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",err_net:"Netzwerkfehler. Bitte versuchen Sie es erneut.",err_required:"Bitte füllen Sie alle Pflichtfelder aus.",err_email:"Bitte geben Sie eine gültige E-Mail-Adresse ein.",lang_label:"Sprache"},
+    it:{title:"Sii il primo a saperlo",subtitle:"Iscriviti per offerte esclusive e accesso anticipato a nuove fragranze e arte.",name:"Nome completo",email:"E-mail",country:"Paese",city:"Città",name_ph:"Il tuo nome",city_ph:"Città",select_country:"Seleziona un paese",c_pre:"Ho letto e accetto l'",privacy:"Informativa sulla privacy",c_post:" (obbligatorio)",button:"Iscriviti",sending:"Invio…",success:"Grazie — sei iscritto.",err_http:"Qualcosa è andato storto. Riprova.",err_net:"Errore di rete. Riprova.",err_required:"Compila tutti i campi obbligatori.",err_email:"Inserisci un indirizzo e-mail valido.",lang_label:"Lingua"},
+    pt:{title:"Seja o primeiro a saber",subtitle:"Inscreva-se para ofertas exclusivas e acesso antecipado a novas fragrâncias e arte.",name:"Nome completo",email:"E-mail",country:"País",city:"Cidade",name_ph:"Seu nome",city_ph:"Cidade",select_country:"Selecione um país",c_pre:"Li e concordo com a ",privacy:"Política de Privacidade",c_post:" (obrigatório)",button:"Inscrever-se",sending:"Enviando…",success:"Obrigado — você está na lista.",err_http:"Algo deu errado. Tente novamente.",err_net:"Erro de rede. Tente novamente.",err_required:"Preencha todos os campos obrigatórios.",err_email:"Insira um endereço de e-mail válido.",lang_label:"Idioma"},
+    ru:{title:"Узнайте первыми",subtitle:"Подпишитесь, чтобы получать эксклюзивные предложения и ранний доступ к новым ароматам и искусству.",name:"Полное имя",email:"Электронная почта",country:"Страна",city:"Город",name_ph:"Ваше имя",city_ph:"Город",select_country:"Выберите страну",c_pre:"Я прочитал(а) и согласен(на) с ",privacy:"Политикой конфиденциальности",c_post:" (обязательно)",button:"Подписаться",sending:"Отправка…",success:"Спасибо — вы подписаны.",err_http:"Что-то пошло не так. Попробуйте ещё раз.",err_net:"Ошибка сети. Попробуйте ещё раз.",err_required:"Пожалуйста, заполните все обязательные поля.",err_email:"Пожалуйста, введите действительный адрес электронной почты.",lang_label:"Язык"},
+    hi:{title:"सबसे पहले जानें",subtitle:"विशेष ऑफ़र और नई खुशबुओं व कला तक जल्दी पहुंच के लिए साइन अप करें।",name:"पूरा नाम",email:"ईमेल",country:"देश",city:"शहर",name_ph:"आपका नाम",city_ph:"शहर",select_country:"देश चुनें",c_pre:"मैंने ",privacy:"गोपनीयता नीति",c_post:" पढ़ ली है और सहमत हूं (आवश्यक)",button:"साइन अप करें",sending:"भेजा जा रहा है…",success:"धन्यवाद — आप सूची में शामिल हैं।",err_http:"कुछ गलत हो गया। कृपया पुनः प्रयास करें।",err_net:"नेटवर्क त्रुटि। कृपया पुनः प्रयास करें।",err_required:"कृपया सभी आवश्यक फ़ील्ड भरें।",err_email:"कृपया एक मान्य ईमेल पता दर्ज करें।",lang_label:"भाषा"},
+    zh:{title:"抢先知道",subtitle:"注册以获取专属优惠，并抢先了解全新香氛与艺术。",name:"全名",email:"电子邮箱",country:"国家/地区",city:"城市",name_ph:"您的姓名",city_ph:"城市",select_country:"选择国家/地区",c_pre:"我已阅读并同意",privacy:"隐私政策",c_post:"（必填）",button:"注册",sending:"发送中…",success:"谢谢 — 您已成功注册。",err_http:"出错了，请重试。",err_net:"网络错误，请重试。",err_required:"请填写所有必填字段。",err_email:"请输入有效的电子邮件地址。",lang_label:"语言"}
   };
 
   // ---------- countries (ISO-2 codes; English names for the submitted value + fallback) ----------
@@ -285,8 +326,17 @@
 
   function qp(name, sp){ return (sp.get(name) || '').trim(); }
 
+  // Param keys we handle explicitly (or that only control the UI). Anything else
+  // on the URL is treated as a custom property added via the generator.
+  var KNOWN_PARAMS = {
+    store_id:1, store:1, shop_id:1, location_id:1, city:1, country:1, country_code:1,
+    channel:1, source:1, qr_id:1, qr:1, code:1, lang:1, locale:1, debug:1,
+    utm_source:1, utm_medium:1, utm_campaign:1, utm_term:1, utm_content:1
+  };
   function parseParams(){
     var sp = new URLSearchParams(window.location.search);
+    var custom = {};
+    sp.forEach(function(val, key){ if(!KNOWN_PARAMS[key] && String(val).trim()!=='') custom[key]=String(val).trim(); });
     return {
       store_id: qp('store_id',sp)||qp('store',sp)||qp('shop_id',sp)||qp('location_id',sp),
       city: qp('city',sp),
@@ -295,7 +345,8 @@
       qr_id: qp('qr_id',sp)||qp('qr',sp)||qp('code',sp),
       lang: qp('lang',sp)||qp('locale',sp),
       utm_source: qp('utm_source',sp), utm_medium: qp('utm_medium',sp),
-      utm_campaign: qp('utm_campaign',sp), utm_term: qp('utm_term',sp), utm_content: qp('utm_content',sp)
+      utm_campaign: qp('utm_campaign',sp), utm_term: qp('utm_term',sp), utm_content: qp('utm_content',sp),
+      custom: custom
     };
   }
 
@@ -397,15 +448,6 @@
   }
 
   // ---------- payload ----------
-  function detectBrowser(ua){
-    if(/Edg\//.test(ua)) return 'Edge';
-    if(/OPR\//.test(ua)) return 'Opera';
-    if(/Chrome\//.test(ua)&&!/Edg\//.test(ua)&&!/OPR\//.test(ua)) return 'Chrome';
-    if(/Safari\//.test(ua)&&!/Chrome\//.test(ua)) return 'Safari';
-    if(/Firefox\//.test(ua)) return 'Firefox';
-    return 'Unknown';
-  }
-  function deviceType(ua){ return /Mobi|Android|iPhone|iPad|iPod/i.test(ua)?'mobile':'desktop'; }
   function splitName(full){
     var clean=(full||'').trim(); if(!clean) return {};
     var bits=clean.split(/\s+/); if(bits.length===1) return {first_name:bits[0]};
@@ -413,38 +455,54 @@
   }
   function countryValueForLocation(v){ if(!v) return ''; return COUNTRY_EN[v]||v; }
 
+  // ---------- email hygiene ----------
+  // Throwaway / disposable inbox domains we don't want on the marketing list.
+  var DISPOSABLE = {
+    'mailinator.com':1,'guerrillamail.com':1,'guerrillamail.info':1,'sharklasers.com':1,
+    '10minutemail.com':1,'tempmail.com':1,'temp-mail.org':1,'getnada.com':1,'nada.email':1,
+    'yopmail.com':1,'trashmail.com':1,'throwawaymail.com':1,'maildrop.cc':1,'dispostable.com':1,
+    'fakeinbox.com':1,'mailnesia.com':1,'mohmal.com':1,'spam4.me':1,'mintemail.com':1,
+    'tempmailo.com':1,'emailondeck.com':1,'mailcatch.com':1,'mailtemp.net':1
+  };
+  function normalizeEmail(raw){ return (raw||'').trim().toLowerCase(); }
+  function isValidEmail(email){
+    // single @, no spaces, a dotted domain with a 2+ char TLD
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return false;
+    if(/\.\./.test(email)) return false;            // no consecutive dots
+    var domain = email.split('@')[1];
+    if(DISPOSABLE[domain]) return false;             // reject throwaway inboxes
+    return true;
+  }
+
   function setStatus(text, kind){
     var el=$('status'); el.textContent=text||''; el.classList.remove('ok','err'); if(kind) el.classList.add(kind);
   }
 
-  function contextData(params, countryLabel, cityValue){
-    var ua=navigator.userAgent||'';
-    return {
+  // Properties sent to Klaviyo: only what the visitor chose (language, consent)
+  // plus the campaign/custom parameters carried on the QR link. No device,
+  // browser, screen or IP-geo metadata is collected.
+  function contextData(params){
+    var out = {
+      // selected UI language (visible control in the form)
+      ui_language: currentLang,
+      // campaign attribution from the QR link
       store_id: params.store_id||null, channel: params.channel||'qr-code', qr_id: params.qr_id||null,
-      ui_language: currentLang, language_source: langSource,
-      browser_name: detectBrowser(ua), browser_language: navigator.language||null,
-      browser_languages: (navigator.languages||[]).join(', ')||null,
-      timezone: (Intl.DateTimeFormat().resolvedOptions().timeZone||null),
-      platform: navigator.platform||null, device_type: deviceType(ua), user_agent: ua,
-      screen_resolution: (window.screen.width+'x'+window.screen.height),
-      viewport: (window.innerWidth+'x'+window.innerHeight),
-      referrer: document.referrer||null, landing_url: location.href, landing_path: location.pathname,
-      query_string: location.search||null,
       utm_source: params.utm_source||null, utm_medium: params.utm_medium||null, utm_campaign: params.utm_campaign||null,
       utm_term: params.utm_term||null, utm_content: params.utm_content||null,
-      city_input: cityValue||null, country_input: countryLabel||null,
-      geo_country: geoInfo?geoInfo.country_code:null, geo_city: geoInfo?geoInfo.city:null, geo_source: geoInfo?geoInfo.source:null,
-      location_source: (params.city||params.country)?'url-param':(geoInfo?'ip-geo':'manual'),
       source: 'in-store-qr-api-form',
+      // GDPR consent record
       consent_privacy_policy: true, consent_privacy_policy_at: new Date().toISOString()
     };
+    // forward any custom parameters added via the generator (don't overwrite the above)
+    Object.keys(params.custom||{}).forEach(function(k){ if(!(k in out)) out[k]=params.custom[k]; });
+    return out;
   }
   function cleanObject(obj){ var out={}; Object.keys(obj).forEach(function(k){var v=obj[k]; if(v!==null&&v!==undefined&&v!=='') out[k]=v;}); return out; }
 
   function buildPayload(values, params){
     var nameParts=splitName(values.full_name);
     var countryLabel=countryValueForLocation(values.country);
-    var props=cleanObject(contextData(params, countryLabel, values.city));
+    var props=cleanObject(contextData(params));
     var attrs=cleanObject({email:values.email, first_name:nameParts.first_name, last_name:nameParts.last_name});
     attrs.location=cleanObject({city:values.city, country:countryLabel});
     attrs.properties=props;
@@ -533,6 +591,7 @@
 
   // ---------- init ----------
   var params = parseParams();
+  var formLoadedAt = Date.now();   // for the bot time-trap below
   var normalizedCountry = normalizeCountry(params.country);
 
   var det = determineLang(params, normalizedCountry);
@@ -565,8 +624,18 @@
     e.preventDefault();
     setStatus('', null);
     var s = STR[currentLang];
+
+    // anti-spam: honeypot filled, or submitted implausibly fast -> drop silently.
+    // Show the normal success message so bots get no signal.
+    if($('hp-company').value || (Date.now()-formLoadedAt) < 1500){
+      setStatus(s.success,'ok'); this.reset(); render(); return;
+    }
+
     if(!this.checkValidity()){ setStatus(s.err_required,'err'); this.reportValidity(); return; }
-    var values={ full_name:$('full-name').value.trim(), email:$('email').value.trim(), country:$('country').value, city:$('city').value.trim() };
+
+    var values={ full_name:$('full-name').value.trim(), email:normalizeEmail($('email').value), country:$('country').value, city:$('city').value.trim() };
+    if(!isValidEmail(values.email)){ setStatus(s.err_email,'err'); $('email').focus(); postHeight(); return; }
+
     var payload=buildPayload(values, params);
     renderDebug(payload,'sending'); $('submit-btn').disabled=true; setStatus(s.sending,null);
     try{
