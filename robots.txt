@@ -1,0 +1,7 @@
+# Only the signup form ( / ) should appear in search results.
+# /generate/ and /guide/ each carry a <meta robots="noindex"> tag; they are
+# left crawlable on purpose so search engines can read and honor that tag.
+User-agent: *
+Allow: /
+
+Sitemap: https://form.zielinskiandrozen.com/sitemap.xml

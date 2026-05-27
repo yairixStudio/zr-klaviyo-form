@@ -3,8 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex, nofollow">
-<title>Zielinski & Rozen — Sign Up</title>
+<title>Sign Up — Zielinski & Rozen</title>
+<meta name="description" content="Sign up for exclusive offers and early access to new fragrances and art from Zielinski & Rozen.">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#1B1B1B">
+<link rel="canonical" href="https://form.zielinskiandrozen.com/">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/favicon.png">
+<!-- Open Graph / social preview -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://form.zielinskiandrozen.com/">
+<meta property="og:title" content="Sign Up — Zielinski & Rozen">
+<meta property="og:description" content="Sign up for exclusive offers and early access to new fragrances and art.">
+<meta property="og:image" content="https://form.zielinskiandrozen.com/favicon.png">
+<meta name="twitter:card" content="summary">
 <style>
   :root{
     --cream:#F4F0E8;
@@ -151,7 +163,7 @@
 <body>
 <div class="page">
   <img class="logo" src="logo.svg" alt="Zielinski & Rozen" width="188" height="39">
-  <main class="sheet" aria-label="signup form">
+  <main class="sheet" aria-labelledby="t-title">
   <header class="head">
     <h1 id="t-title"></h1>
     <p class="sub" id="t-subtitle"></p>
@@ -354,6 +366,10 @@
     var s = STR[currentLang];
     document.documentElement.lang = currentLang;
     document.documentElement.dir = RTL[currentLang] ? 'rtl' : 'ltr';
+
+    document.title = s.title + ' — Zielinski & Rozen';
+    var metaDesc = document.querySelector('meta[name="description"]');
+    if(metaDesc) metaDesc.setAttribute('content', s.subtitle);
 
     $('t-title').textContent = s.title;
     $('t-subtitle').textContent = s.subtitle;

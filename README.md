@@ -5,7 +5,7 @@ Klaviyo's [Client Subscriptions API](https://developers.klaviyo.com/en/reference
 No build step, no dependencies — static HTML hosted on GitHub Pages. It can be shared as a link,
 printed as a QR code, or embedded as an `<iframe>` on any website.
 
-**Live:** https://yairixstudio.github.io/zr-klaviyo-form/
+**Live:** https://form.zielinskiandrozen.com/
 
 ## Pages
 
@@ -55,7 +55,7 @@ auto-resizes the iframe:
 
 <script>
   (function () {
-    var base = 'https://yairixstudio.github.io/zr-klaviyo-form/';
+    var base = 'https://form.zielinskiandrozen.com/';
     var iframe = document.getElementById('zr-form');
     iframe.src = base + window.location.search;        // forward the page's URL params
     window.addEventListener('message', function (e) {
