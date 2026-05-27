@@ -366,7 +366,8 @@
       store_id: qp('store_id',sp)||qp('store',sp)||qp('shop_id',sp)||qp('location_id',sp),
       city: qp('city',sp),
       country: qp('country',sp)||qp('country_code',sp),
-      channel: qp('channel',sp)||qp('source',sp)||qp('utm_source',sp)||'qr-code',
+      channel: qp('channel',sp)||qp('utm_source',sp)||'qr-code',
+      source: qp('source',sp)||'in-store-qr-api-form',
       qr_id: qp('qr_id',sp)||qp('qr',sp)||qp('code',sp),
       lang: qp('lang',sp)||qp('locale',sp),
       utm_source: qp('utm_source',sp), utm_medium: qp('utm_medium',sp),
@@ -514,7 +515,7 @@
       store_id: params.store_id||null, channel: params.channel||'qr-code', qr_id: params.qr_id||null,
       utm_source: params.utm_source||null, utm_medium: params.utm_medium||null, utm_campaign: params.utm_campaign||null,
       utm_term: params.utm_term||null, utm_content: params.utm_content||null,
-      source: 'in-store-qr-api-form',
+      source: params.source||'in-store-qr-api-form',
       // GDPR consent record
       consent_privacy_policy: true, consent_privacy_policy_at: new Date().toISOString()
     };

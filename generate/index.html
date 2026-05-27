@@ -69,6 +69,8 @@
   .acc[open] .chev{transform:rotate(180deg)}
   .acc[open]>summary{border-bottom:1px solid var(--line)}
   .acc-body{padding:16px 14px}
+  .sub-label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--off);
+    margin:20px 0 10px;padding-top:16px;border-top:1px solid var(--line)}
 
   .extra-rows{display:flex;flex-direction:column;gap:10px}
   .extra-row{display:grid;grid-template-columns:1fr 1fr 40px;gap:10px;align-items:center}
@@ -132,7 +134,7 @@
 <body>
 <div class="wrap">
   <nav>
-    <a href="../">Form</a>
+    <a href="../" target="_blank" rel="noopener">Form&nbsp;↗</a>
     <a href="./" class="active">QR Generator</a>
     <button type="button" id="guide-toggle" class="navbtn" aria-expanded="false" aria-controls="guide">Guide</button>
   </nav>
@@ -146,8 +148,9 @@
       <p class="cat-note">Fill in where this QR will live, then download it. Everything is optional — more options below.</p>
       <div class="fields">
         <label>Store ID<input id="f-store_id" type="text" placeholder="e.g. paris-marais" data-guide="store_id"></label>
+        <label>Language<select id="f-lang" data-guide="lang"></select></label>
+        <label>Country<select id="f-country" data-guide="country"></select></label>
         <label>City<input id="f-city" type="text" placeholder="e.g. Paris" data-guide="city"></label>
-        <label class="full">Country<select id="f-country" data-guide="country"></select></label>
       </div>
 
       <div class="more">
@@ -166,30 +169,9 @@
               <label>UTM campaign<input id="f-utm_campaign" type="text" placeholder="e.g. spring-launch" data-guide="utm"></label>
               <label>UTM term<input id="f-utm_term" type="text" placeholder="optional" data-guide="utm"></label>
               <label class="full">UTM content<input id="f-utm_content" type="text" placeholder="optional" data-guide="utm"></label>
+              <label class="full">Source<input id="f-source" type="text" placeholder="in-store-qr-api-form" value="in-store-qr-api-form" data-guide="source"></label>
             </div>
-          </div>
-        </details>
-
-        <details class="acc" data-acc="display">
-          <summary>
-            <span>Language</span>
-            <span class="count"></span>
-            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-          </summary>
-          <div class="acc-body">
-            <div class="fields">
-              <label class="full">Starting language (leave blank to auto-detect)<input id="f-lang" type="text" placeholder="e.g. fr" data-guide="lang"></label>
-            </div>
-          </div>
-        </details>
-
-        <details class="acc" data-acc="custom">
-          <summary>
-            <span>Custom parameters</span>
-            <span class="count"></span>
-            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-          </summary>
-          <div class="acc-body">
+            <p class="sub-label">Custom parameters</p>
             <p class="cat-note" style="margin-top:0">Anything else you want stored with the signup — your own key / value pairs.</p>
             <div class="extra-rows" id="extra-rows"></div>
             <button class="add-btn" id="add-row" type="button">+ Add parameter</button>
@@ -255,6 +237,10 @@
       <p>Standard marketing tags, stored with the signup and recognised by analytics tools:</p>
       <p><code>utm_source</code> — where (e.g. instagram) · <code>utm_medium</code> — type (e.g. qr) · <code>utm_campaign</code> — the campaign name · <code>utm_term</code> / <code>utm_content</code> — optional extras.</p>
     </section>
+    <section class="g-sec" id="g-source">
+      <h3>Source</h3>
+      <p>A fixed label identifying which tool the signup came from — defaults to <code>in-store-qr-api-form</code>. Saved as <code>source</code>, so in Klaviyo you can separate signups from this QR form from those coming via the website, pop-ups, or manual import. Usually leave it as-is.</p>
+    </section>
     <section class="g-sec" id="g-lang">
       <h3>Starting language</h3>
       <p>Forces the form to open in a specific language — e.g. <code>fr</code>, <code>es</code>, <code>ar</code>. Leave blank to auto-detect from the visitor's browser and location.</p>
@@ -275,7 +261,7 @@
 (function(){
   'use strict';
   var BASE = 'https://form.zielinskiandrozen.com/';
-  var BASE_FIELDS = ['store_id','city','country','channel','qr_id','utm_source','utm_medium','utm_campaign','utm_term','utm_content','lang'];
+  var BASE_FIELDS = ['store_id','city','country','channel','source','qr_id','utm_source','utm_medium','utm_campaign','utm_term','utm_content','lang'];
   var $ = function(id){return document.getElementById(id);};
 
   // Country dropdown (same list the signup form supports; value = ISO code).
@@ -325,10 +311,20 @@
     sel.innerHTML=html;
   })();
 
+  // Language dropdown (the 11 UI languages the form supports; blank = auto-detect).
+  (function buildLangSelect(){
+    var LANGS=[['en','English'],['ar','العربية'],['zh','中文'],['fr','Français'],['de','Deutsch'],
+      ['he','עברית'],['hi','हिन्दी'],['it','Italiano'],['pt','Português'],['ru','Русский'],['es','Español']];
+    var html='<option value=""></option>';
+    LANGS.forEach(function(l){ html+='<option value="'+l[0]+'">'+l[1]+' ('+l[0]+')</option>'; });
+    $('f-lang').innerHTML=html;
+  })();
+
   // Prefill from this page's own URL.
   var sp = new URLSearchParams(location.search);
   BASE_FIELDS.forEach(function(k){ var v=sp.get(k); if(v && $('f-'+k)) $('f-'+k).value=v; });
   $('f-country').addEventListener('change', refresh);
+  $('f-lang').addEventListener('change', refresh);
 
   // ---- additional param rows ----
   function addRow(k, v){
@@ -372,12 +368,17 @@
   // How many params a section actually contributes (non-empty & not just the
   // default value) — shown as a badge so collapsed sections still reveal content.
   function sectionCount(acc){
-    if(acc.dataset.acc==='custom'){
-      return Array.prototype.filter.call(acc.querySelectorAll('.extra-row'),
-        function(r){ return r.querySelector('.ek').value.trim()!==''; }).length;
-    }
-    return Array.prototype.filter.call(acc.querySelectorAll('input[type=text]'),
-      function(i){ return i.value.trim()!=='' && i.value!==i.defaultValue; }).length;
+    var n=0;
+    // preset text fields that the user changed away from their default
+    acc.querySelectorAll('input[type=text]').forEach(function(i){
+      if(i.classList.contains('ek')||i.classList.contains('ev')) return; // custom rows handled below
+      if(i.value.trim()!=='' && i.value!==i.defaultValue) n++;
+    });
+    // each custom parameter row that has a key
+    acc.querySelectorAll('.extra-row').forEach(function(r){
+      if(r.querySelector('.ek').value.trim()!=='') n++;
+    });
+    return n;
   }
   function updateCounts(){
     document.querySelectorAll('details.acc').forEach(function(acc){
