@@ -122,7 +122,10 @@
     appearance:none;
   }
   .field input:focus,.field select:focus{outline:none;border-color:var(--off)}
-  #email{direction:ltr;text-align:left}
+  #email,#phone{direction:ltr;text-align:left}
+  /* date input: keep the same height/feel as text inputs */
+  .field input[type="date"]{line-height:44px}
+  .field input[type="date"]::-webkit-date-and-time-value{text-align:inherit}
 
   /* select caret — right in LTR, left in RTL */
   .field select{
@@ -228,6 +231,17 @@
       </div>
     </div>
 
+    <div class="row">
+      <div class="field">
+        <label for="phone" id="t-phone"></label>
+        <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="24" inputmode="tel" spellcheck="false" placeholder="+1 234 567 8900">
+      </div>
+      <div class="field">
+        <label for="birthday" id="t-birthday"></label>
+        <input id="birthday" name="birthday" type="date" autocomplete="bday">
+      </div>
+    </div>
+
     <input id="store-id" name="store_id" type="hidden">
     <input id="channel" name="channel" type="hidden">
     <input id="qr-id" name="qr_id" type="hidden">
@@ -282,17 +296,17 @@
   var DN_LOCALE = { en:'en', he:'he', ar:'ar', fr:'fr', es:'es', de:'de', it:'it', pt:'pt-BR', ru:'ru', hi:'hi', zh:'zh-Hans' };
 
   var STR = {
-    en:{title:"Be the First to Know",subtitle:"Sign up for exclusive offers and early access to new fragrances and art.",name:"Full Name",email:"Email",country:"Country",city:"City",name_ph:"Your name",city_ph:"City",select_country:"Select country",c_pre:"I have read and agree to the ",privacy:"Privacy Policy",c_post:" (required)",button:"Sign Up",sending:"Sending…",success:"Thank you — you're on the list.",err_http:"Something went wrong. Please try again.",err_net:"Network error. Please try again.",err_required:"Please complete all required fields.",err_email:"Please enter a valid email address.",lang_label:"Language"},
-    he:{title:"להיות הראשונים לדעת",subtitle:"הירשמו למבצעים בלעדיים וגישה מוקדמת לבשמים ולאמנות חדשים.",name:"שם מלא",email:"אימייל",country:"מדינה",city:"עיר",name_ph:"השם שלך",city_ph:"עיר",select_country:"בחרו מדינה",c_pre:"קראתי ואני מסכים/ה ל",privacy:"מדיניות הפרטיות",c_post:" (חובה)",button:"הרשמה",sending:"שולח…",success:"תודה — נרשמת בהצלחה.",err_http:"משהו השתבש. נסו שוב.",err_net:"שגיאת רשת. נסו שוב.",err_required:"אנא מלאו את כל שדות החובה.",err_email:"אנא הזינו כתובת אימייל תקינה.",lang_label:"שפה"},
-    ar:{title:"كن أول من يعرف",subtitle:"اشترك للحصول على عروض حصرية ووصول مبكر إلى عطور وأعمال فنية جديدة.",name:"الاسم الكامل",email:"البريد الإلكتروني",country:"الدولة",city:"المدينة",name_ph:"اسمك",city_ph:"المدينة",select_country:"اختر الدولة",c_pre:"لقد قرأت وأوافق على ",privacy:"سياسة الخصوصية",c_post:" (مطلوب)",button:"اشتراك",sending:"جارٍ الإرسال…",success:"شكرًا لك — تم تسجيلك.",err_http:"حدث خطأ ما. حاول مرة أخرى.",err_net:"خطأ في الشبكة. حاول مرة أخرى.",err_required:"يرجى إكمال جميع الحقول المطلوبة.",err_email:"يرجى إدخال عنوان بريد إلكتروني صالح.",lang_label:"اللغة"},
-    fr:{title:"Soyez les premiers informés",subtitle:"Inscrivez-vous pour des offres exclusives et un accès anticipé aux nouveaux parfums et œuvres d'art.",name:"Nom complet",email:"E-mail",country:"Pays",city:"Ville",name_ph:"Votre nom",city_ph:"Ville",select_country:"Choisissez un pays",c_pre:"J'ai lu et j'accepte la ",privacy:"Politique de confidentialité",c_post:" (obligatoire)",button:"S'inscrire",sending:"Envoi…",success:"Merci — vous êtes inscrit.",err_http:"Une erreur s'est produite. Veuillez réessayer.",err_net:"Erreur réseau. Veuillez réessayer.",err_required:"Veuillez remplir tous les champs obligatoires.",err_email:"Veuillez saisir une adresse e-mail valide.",lang_label:"Langue"},
-    es:{title:"Sé el primero en saberlo",subtitle:"Suscríbete para recibir ofertas exclusivas y acceso anticipado a nuevas fragancias y arte.",name:"Nombre completo",email:"Correo electrónico",country:"País",city:"Ciudad",name_ph:"Tu nombre",city_ph:"Ciudad",select_country:"Selecciona un país",c_pre:"He leído y acepto la ",privacy:"Política de Privacidad",c_post:" (obligatorio)",button:"Suscribirse",sending:"Enviando…",success:"Gracias — ya estás en la lista.",err_http:"Algo salió mal. Inténtalo de nuevo.",err_net:"Error de red. Inténtalo de nuevo.",err_required:"Completa todos los campos obligatorios.",err_email:"Introduce una dirección de correo electrónico válida.",lang_label:"Idioma"},
-    de:{title:"Erfahren Sie es als Erste",subtitle:"Melden Sie sich an für exklusive Angebote und frühen Zugang zu neuen Düften und Kunst.",name:"Vollständiger Name",email:"E-Mail",country:"Land",city:"Stadt",name_ph:"Ihr Name",city_ph:"Stadt",select_country:"Land auswählen",c_pre:"Ich habe die ",privacy:"Datenschutzrichtlinie",c_post:" gelesen und stimme zu (erforderlich)",button:"Anmelden",sending:"Senden…",success:"Danke — Sie sind dabei.",err_http:"Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",err_net:"Netzwerkfehler. Bitte versuchen Sie es erneut.",err_required:"Bitte füllen Sie alle Pflichtfelder aus.",err_email:"Bitte geben Sie eine gültige E-Mail-Adresse ein.",lang_label:"Sprache"},
-    it:{title:"Sii il primo a saperlo",subtitle:"Iscriviti per offerte esclusive e accesso anticipato a nuove fragranze e arte.",name:"Nome completo",email:"E-mail",country:"Paese",city:"Città",name_ph:"Il tuo nome",city_ph:"Città",select_country:"Seleziona un paese",c_pre:"Ho letto e accetto l'",privacy:"Informativa sulla privacy",c_post:" (obbligatorio)",button:"Iscriviti",sending:"Invio…",success:"Grazie — sei iscritto.",err_http:"Qualcosa è andato storto. Riprova.",err_net:"Errore di rete. Riprova.",err_required:"Compila tutti i campi obbligatori.",err_email:"Inserisci un indirizzo e-mail valido.",lang_label:"Lingua"},
-    pt:{title:"Seja o primeiro a saber",subtitle:"Inscreva-se para ofertas exclusivas e acesso antecipado a novas fragrâncias e arte.",name:"Nome completo",email:"E-mail",country:"País",city:"Cidade",name_ph:"Seu nome",city_ph:"Cidade",select_country:"Selecione um país",c_pre:"Li e concordo com a ",privacy:"Política de Privacidade",c_post:" (obrigatório)",button:"Inscrever-se",sending:"Enviando…",success:"Obrigado — você está na lista.",err_http:"Algo deu errado. Tente novamente.",err_net:"Erro de rede. Tente novamente.",err_required:"Preencha todos os campos obrigatórios.",err_email:"Insira um endereço de e-mail válido.",lang_label:"Idioma"},
-    ru:{title:"Узнайте первыми",subtitle:"Подпишитесь, чтобы получать эксклюзивные предложения и ранний доступ к новым ароматам и искусству.",name:"Полное имя",email:"Электронная почта",country:"Страна",city:"Город",name_ph:"Ваше имя",city_ph:"Город",select_country:"Выберите страну",c_pre:"Я прочитал(а) и согласен(на) с ",privacy:"Политикой конфиденциальности",c_post:" (обязательно)",button:"Подписаться",sending:"Отправка…",success:"Спасибо — вы подписаны.",err_http:"Что-то пошло не так. Попробуйте ещё раз.",err_net:"Ошибка сети. Попробуйте ещё раз.",err_required:"Пожалуйста, заполните все обязательные поля.",err_email:"Пожалуйста, введите действительный адрес электронной почты.",lang_label:"Язык"},
-    hi:{title:"सबसे पहले जानें",subtitle:"विशेष ऑफ़र और नई खुशबुओं व कला तक जल्दी पहुंच के लिए साइन अप करें।",name:"पूरा नाम",email:"ईमेल",country:"देश",city:"शहर",name_ph:"आपका नाम",city_ph:"शहर",select_country:"देश चुनें",c_pre:"मैंने ",privacy:"गोपनीयता नीति",c_post:" पढ़ ली है और सहमत हूं (आवश्यक)",button:"साइन अप करें",sending:"भेजा जा रहा है…",success:"धन्यवाद — आप सूची में शामिल हैं।",err_http:"कुछ गलत हो गया। कृपया पुनः प्रयास करें।",err_net:"नेटवर्क त्रुटि। कृपया पुनः प्रयास करें।",err_required:"कृपया सभी आवश्यक फ़ील्ड भरें।",err_email:"कृपया एक मान्य ईमेल पता दर्ज करें।",lang_label:"भाषा"},
-    zh:{title:"抢先知道",subtitle:"注册以获取专属优惠，并抢先了解全新香氛与艺术。",name:"全名",email:"电子邮箱",country:"国家/地区",city:"城市",name_ph:"您的姓名",city_ph:"城市",select_country:"选择国家/地区",c_pre:"我已阅读并同意",privacy:"隐私政策",c_post:"（必填）",button:"注册",sending:"发送中…",success:"谢谢 — 您已成功注册。",err_http:"出错了，请重试。",err_net:"网络错误，请重试。",err_required:"请填写所有必填字段。",err_email:"请输入有效的电子邮件地址。",lang_label:"语言"}
+    en:{title:"Be the First to Know",subtitle:"Sign up for exclusive offers and early access to new fragrances and art.",name:"Full Name",email:"Email",country:"Country",city:"City",name_ph:"Your name",city_ph:"City",select_country:"Select country",c_pre:"I have read and agree to the ",privacy:"Privacy Policy",c_post:" (required)",button:"Sign Up",sending:"Sending…",success:"Thank you — you're on the list.",err_http:"Something went wrong. Please try again.",err_net:"Network error. Please try again.",err_required:"Please complete all required fields.",err_email:"Please enter a valid email address.",phone:"Phone Number",birthday:"Birth Date",optional:"optional",err_phone:"Please enter a valid phone number.",lang_label:"Language"},
+    he:{title:"להיות הראשונים לדעת",subtitle:"הירשמו למבצעים בלעדיים וגישה מוקדמת לבשמים ולאמנות חדשים.",name:"שם מלא",email:"אימייל",country:"מדינה",city:"עיר",name_ph:"השם שלך",city_ph:"עיר",select_country:"בחרו מדינה",c_pre:"קראתי ואני מסכים/ה ל",privacy:"מדיניות הפרטיות",c_post:" (חובה)",button:"הרשמה",sending:"שולח…",success:"תודה — נרשמת בהצלחה.",err_http:"משהו השתבש. נסו שוב.",err_net:"שגיאת רשת. נסו שוב.",err_required:"אנא מלאו את כל שדות החובה.",err_email:"אנא הזינו כתובת אימייל תקינה.",phone:"מספר טלפון",birthday:"תאריך לידה",optional:"אופציונלי",err_phone:"אנא הזינו מספר טלפון תקין.",lang_label:"שפה"},
+    ar:{title:"كن أول من يعرف",subtitle:"اشترك للحصول على عروض حصرية ووصول مبكر إلى عطور وأعمال فنية جديدة.",name:"الاسم الكامل",email:"البريد الإلكتروني",country:"الدولة",city:"المدينة",name_ph:"اسمك",city_ph:"المدينة",select_country:"اختر الدولة",c_pre:"لقد قرأت وأوافق على ",privacy:"سياسة الخصوصية",c_post:" (مطلوب)",button:"اشتراك",sending:"جارٍ الإرسال…",success:"شكرًا لك — تم تسجيلك.",err_http:"حدث خطأ ما. حاول مرة أخرى.",err_net:"خطأ في الشبكة. حاول مرة أخرى.",err_required:"يرجى إكمال جميع الحقول المطلوبة.",err_email:"يرجى إدخال عنوان بريد إلكتروني صالح.",phone:"رقم الهاتف",birthday:"تاريخ الميلاد",optional:"اختياري",err_phone:"يرجى إدخال رقم هاتف صالح.",lang_label:"اللغة"},
+    fr:{title:"Soyez les premiers informés",subtitle:"Inscrivez-vous pour des offres exclusives et un accès anticipé aux nouveaux parfums et œuvres d'art.",name:"Nom complet",email:"E-mail",country:"Pays",city:"Ville",name_ph:"Votre nom",city_ph:"Ville",select_country:"Choisissez un pays",c_pre:"J'ai lu et j'accepte la ",privacy:"Politique de confidentialité",c_post:" (obligatoire)",button:"S'inscrire",sending:"Envoi…",success:"Merci — vous êtes inscrit.",err_http:"Une erreur s'est produite. Veuillez réessayer.",err_net:"Erreur réseau. Veuillez réessayer.",err_required:"Veuillez remplir tous les champs obligatoires.",err_email:"Veuillez saisir une adresse e-mail valide.",phone:"Téléphone",birthday:"Date de naissance",optional:"facultatif",err_phone:"Veuillez saisir un numéro de téléphone valide.",lang_label:"Langue"},
+    es:{title:"Sé el primero en saberlo",subtitle:"Suscríbete para recibir ofertas exclusivas y acceso anticipado a nuevas fragancias y arte.",name:"Nombre completo",email:"Correo electrónico",country:"País",city:"Ciudad",name_ph:"Tu nombre",city_ph:"Ciudad",select_country:"Selecciona un país",c_pre:"He leído y acepto la ",privacy:"Política de Privacidad",c_post:" (obligatorio)",button:"Suscribirse",sending:"Enviando…",success:"Gracias — ya estás en la lista.",err_http:"Algo salió mal. Inténtalo de nuevo.",err_net:"Error de red. Inténtalo de nuevo.",err_required:"Completa todos los campos obligatorios.",err_email:"Introduce una dirección de correo electrónico válida.",phone:"Teléfono",birthday:"Fecha de nacimiento",optional:"opcional",err_phone:"Introduce un número de teléfono válido.",lang_label:"Idioma"},
+    de:{title:"Erfahren Sie es als Erste",subtitle:"Melden Sie sich an für exklusive Angebote und frühen Zugang zu neuen Düften und Kunst.",name:"Vollständiger Name",email:"E-Mail",country:"Land",city:"Stadt",name_ph:"Ihr Name",city_ph:"Stadt",select_country:"Land auswählen",c_pre:"Ich habe die ",privacy:"Datenschutzrichtlinie",c_post:" gelesen und stimme zu (erforderlich)",button:"Anmelden",sending:"Senden…",success:"Danke — Sie sind dabei.",err_http:"Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",err_net:"Netzwerkfehler. Bitte versuchen Sie es erneut.",err_required:"Bitte füllen Sie alle Pflichtfelder aus.",err_email:"Bitte geben Sie eine gültige E-Mail-Adresse ein.",phone:"Telefonnummer",birthday:"Geburtsdatum",optional:"optional",err_phone:"Bitte geben Sie eine gültige Telefonnummer ein.",lang_label:"Sprache"},
+    it:{title:"Sii il primo a saperlo",subtitle:"Iscriviti per offerte esclusive e accesso anticipato a nuove fragranze e arte.",name:"Nome completo",email:"E-mail",country:"Paese",city:"Città",name_ph:"Il tuo nome",city_ph:"Città",select_country:"Seleziona un paese",c_pre:"Ho letto e accetto l'",privacy:"Informativa sulla privacy",c_post:" (obbligatorio)",button:"Iscriviti",sending:"Invio…",success:"Grazie — sei iscritto.",err_http:"Qualcosa è andato storto. Riprova.",err_net:"Errore di rete. Riprova.",err_required:"Compila tutti i campi obbligatori.",err_email:"Inserisci un indirizzo e-mail valido.",phone:"Telefono",birthday:"Data di nascita",optional:"facoltativo",err_phone:"Inserisci un numero di telefono valido.",lang_label:"Lingua"},
+    pt:{title:"Seja o primeiro a saber",subtitle:"Inscreva-se para ofertas exclusivas e acesso antecipado a novas fragrâncias e arte.",name:"Nome completo",email:"E-mail",country:"País",city:"Cidade",name_ph:"Seu nome",city_ph:"Cidade",select_country:"Selecione um país",c_pre:"Li e concordo com a ",privacy:"Política de Privacidade",c_post:" (obrigatório)",button:"Inscrever-se",sending:"Enviando…",success:"Obrigado — você está na lista.",err_http:"Algo deu errado. Tente novamente.",err_net:"Erro de rede. Tente novamente.",err_required:"Preencha todos os campos obrigatórios.",err_email:"Insira um endereço de e-mail válido.",phone:"Telefone",birthday:"Data de nascimento",optional:"opcional",err_phone:"Insira um número de telefone válido.",lang_label:"Idioma"},
+    ru:{title:"Узнайте первыми",subtitle:"Подпишитесь, чтобы получать эксклюзивные предложения и ранний доступ к новым ароматам и искусству.",name:"Полное имя",email:"Электронная почта",country:"Страна",city:"Город",name_ph:"Ваше имя",city_ph:"Город",select_country:"Выберите страну",c_pre:"Я прочитал(а) и согласен(на) с ",privacy:"Политикой конфиденциальности",c_post:" (обязательно)",button:"Подписаться",sending:"Отправка…",success:"Спасибо — вы подписаны.",err_http:"Что-то пошло не так. Попробуйте ещё раз.",err_net:"Ошибка сети. Попробуйте ещё раз.",err_required:"Пожалуйста, заполните все обязательные поля.",err_email:"Пожалуйста, введите действительный адрес электронной почты.",phone:"Телефон",birthday:"Дата рождения",optional:"необязательно",err_phone:"Пожалуйста, введите действительный номер телефона.",lang_label:"Язык"},
+    hi:{title:"सबसे पहले जानें",subtitle:"विशेष ऑफ़र और नई खुशबुओं व कला तक जल्दी पहुंच के लिए साइन अप करें।",name:"पूरा नाम",email:"ईमेल",country:"देश",city:"शहर",name_ph:"आपका नाम",city_ph:"शहर",select_country:"देश चुनें",c_pre:"मैंने ",privacy:"गोपनीयता नीति",c_post:" पढ़ ली है और सहमत हूं (आवश्यक)",button:"साइन अप करें",sending:"भेजा जा रहा है…",success:"धन्यवाद — आप सूची में शामिल हैं।",err_http:"कुछ गलत हो गया। कृपया पुनः प्रयास करें।",err_net:"नेटवर्क त्रुटि। कृपया पुनः प्रयास करें।",err_required:"कृपया सभी आवश्यक फ़ील्ड भरें।",err_email:"कृपया एक मान्य ईमेल पता दर्ज करें।",phone:"फ़ोन नंबर",birthday:"जन्म तिथि",optional:"वैकल्पिक",err_phone:"कृपया एक मान्य फ़ोन नंबर दर्ज करें।",lang_label:"भाषा"},
+    zh:{title:"抢先知道",subtitle:"注册以获取专属优惠，并抢先了解全新香氛与艺术。",name:"全名",email:"电子邮箱",country:"国家/地区",city:"城市",name_ph:"您的姓名",city_ph:"城市",select_country:"选择国家/地区",c_pre:"我已阅读并同意",privacy:"隐私政策",c_post:"（必填）",button:"注册",sending:"发送中…",success:"谢谢 — 您已成功注册。",err_http:"出错了，请重试。",err_net:"网络错误，请重试。",err_required:"请填写所有必填字段。",err_email:"请输入有效的电子邮件地址。",phone:"电话号码",birthday:"出生日期",optional:"选填",err_phone:"请输入有效的电话号码。",lang_label:"语言"}
   };
 
   // ---------- countries (ISO-2 codes; English names for the submitted value + fallback) ----------
@@ -454,6 +468,8 @@
     $('t-email').textContent = s.email;
     $('t-country').textContent = s.country;
     $('t-city').textContent = s.city;
+    $('t-phone').textContent = s.phone + ' (' + s.optional + ')';
+    $('t-birthday').textContent = s.birthday + ' (' + s.optional + ')';
     $('full-name').placeholder = s.name_ph;
     $('city').placeholder = s.city_ph;
     $('c-pre').textContent = s.c_pre;
@@ -480,6 +496,14 @@
     return {first_name:bits.shift(), last_name:bits.join(' ')};
   }
   function countryValueForLocation(v){ if(!v) return ''; return COUNTRY_EN[v]||v; }
+
+  // ---------- phone hygiene ----------
+  function normalizePhone(raw){
+    var p=(raw||'').trim().replace(/[\s\-().]/g,'');
+    if(p.indexOf('00')===0) p='+'+p.slice(2);
+    return p;
+  }
+  function isValidPhone(p){ return /^\+?[0-9]{7,15}$/.test(p); }
 
   // ---------- email hygiene ----------
   // Throwaway / disposable inbox domains we don't want on the marketing list.
@@ -530,6 +554,13 @@
     var countryLabel=countryValueForLocation(values.country);
     var props=cleanObject(contextData(params));
     var attrs=cleanObject({email:values.email, first_name:nameParts.first_name, last_name:nameParts.last_name});
+    // Klaviyo only accepts E.164 phone numbers ("+" prefix); anything else
+    // goes into properties so an unparseable phone never blocks the signup.
+    if(values.phone){
+      if(values.phone.charAt(0)==='+') attrs.phone_number=values.phone;
+      else props.phone=values.phone;
+    }
+    if(values.birthday) props.birthday=values.birthday; // YYYY-MM-DD
     attrs.location=cleanObject({city:values.city, country:countryLabel});
     attrs.properties=props;
     return {data:{type:'subscription',attributes:{profile:{data:{type:'profile',attributes:attrs}}},relationships:{list:{data:{type:'list',id:LIST_ID}}}}};
@@ -641,6 +672,7 @@
   $('store-id').value = params.store_id || '';
   $('channel').value = params.channel || 'qr-code';
   $('qr-id').value = params.qr_id || '';
+  $('birthday').max = new Date().toISOString().slice(0,10); // no future birth dates
   if(normalizedCountry){ if(!COUNTRY_EN[normalizedCountry]) buildCountrySelect($('country'), currentLang, normalizedCountry); $('country').value = normalizedCountry; }
   renderDebug(null,'idle');
 
@@ -659,8 +691,10 @@
 
     if(!this.checkValidity()){ setStatus(s.err_required,'err'); this.reportValidity(); return; }
 
-    var values={ full_name:$('full-name').value.trim(), email:normalizeEmail($('email').value), country:$('country').value, city:$('city').value.trim() };
+    var values={ full_name:$('full-name').value.trim(), email:normalizeEmail($('email').value), country:$('country').value, city:$('city').value.trim(),
+      phone:normalizePhone($('phone').value), birthday:$('birthday').value };
     if(!isValidEmail(values.email)){ setStatus(s.err_email,'err'); $('email').focus(); postHeight(); return; }
+    if(values.phone && !isValidPhone(values.phone)){ setStatus(s.err_phone,'err'); $('phone').focus(); postHeight(); return; }
 
     var payload=buildPayload(values, params);
     renderDebug(payload,'sending'); $('submit-btn').disabled=true; setStatus(s.sending,null);
