@@ -88,6 +88,16 @@
   button.act.done{background:#0B6B3A;border-color:#0B6B3A;color:#fff}
   a.act{display:flex;align-items:center;justify-content:center;text-decoration:none}
 
+  /* after-submit destination */
+  .after-submit{margin-top:24px}
+  .as-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:4px}
+  .as-opt{display:flex;align-items:center;gap:9px;font-size:14px;color:var(--off);cursor:pointer;
+    text-transform:none;letter-spacing:0}
+  .as-opt input{width:16px;height:16px;accent-color:var(--off);cursor:pointer;flex:none}
+  .as-opt span{color:var(--soft);font-size:13px}
+  #redirect-wrap{display:flex;flex-direction:column;gap:5px;margin-top:12px;
+    font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--soft)}
+
   .linkbox{margin-top:26px}
   .linkrow{display:flex;gap:0;border:1px solid var(--line);background:#fff}
   .linkrow input{flex:1;height:46px;border:0;padding:0 12px;font-family:var(--mono);font-size:12.5px;color:var(--off);background:transparent}
@@ -179,6 +189,16 @@
         </details>
       </div>
 
+      <div class="after-submit">
+        <h2>After submit</h2>
+        <p class="cat-note" style="margin-top:0">Where visitors land once they’ve signed up successfully.</p>
+        <div class="as-opts">
+          <label class="as-opt"><input type="radio" name="after" value="thanks" checked data-guide="after">Thank-you page <span>— a clean confirmation screen</span></label>
+          <label class="as-opt"><input type="radio" name="after" value="link" data-guide="after">Redirect to a link</label>
+        </div>
+        <label id="redirect-wrap">Redirect URL<input id="f-redirect" type="text" placeholder="https://zielinskiandrozen.com/welcome" data-guide="after"></label>
+      </div>
+
       <div class="linkbox">
         <h2>Form link</h2>
         <div class="linkrow">
@@ -248,6 +268,11 @@
     <section class="g-sec" id="g-custom">
       <h3>Custom parameters</h3>
       <p>Add any other key / value pairs you want stored with the signup. The key becomes a custom property on the Klaviyo profile — useful for one-off tags this form doesn't cover.</p>
+    </section>
+    <section class="g-sec" id="g-after">
+      <h3>After submit</h3>
+      <p>Choose what a visitor sees the moment they finish signing up. <strong>Thank-you page</strong> keeps them on a clean confirmation screen inside the form — nothing else to set.</p>
+      <p><strong>Redirect to a link</strong> sends them to any page you enter (e.g. your site, a coupon, an Instagram). Use a full <code>https://</code> address. The link travels as a <code>redirect</code> parameter and is followed only after the signup succeeds.</p>
     </section>
     <section class="g-sec" id="g-link">
       <h3>The link &amp; QR code</h3>
@@ -326,6 +351,21 @@
   $('f-country').addEventListener('change', refresh);
   $('f-lang').addEventListener('change', refresh);
 
+  // ---- after-submit destination (thank-you page vs custom link) ----
+  var redirectWrap = $('redirect-wrap');
+  function afterMode(){ var r=document.querySelector('input[name=after]:checked'); return r?r.value:'thanks'; }
+  function syncAfter(){ redirectWrap.style.display = afterMode()==='link' ? 'flex' : 'none'; }
+  document.querySelectorAll('input[name=after]').forEach(function(r){
+    r.addEventListener('change', function(){ syncAfter(); refresh(); });
+  });
+  $('f-redirect').addEventListener('input', refresh);
+  // Prefill redirect from this page's own URL.
+  (function(){
+    var rv=(sp.get('redirect')||'').trim();
+    if(rv){ $('f-redirect').value=rv; var lk=document.querySelector('input[name=after][value=link]'); if(lk) lk.checked=true; }
+    syncAfter();
+  })();
+
   // ---- additional param rows ----
   function addRow(k, v){
     var row=document.createElement('div'); row.className='extra-row';
@@ -338,7 +378,7 @@
     row.querySelector('.rm').addEventListener('click', function(){ row.remove(); refresh(); });
   }
   // Seed extra rows from any non-base params on this page's URL.
-  sp.forEach(function(val,key){ if(BASE_FIELDS.indexOf(key)===-1) addRow(key,val); });
+  sp.forEach(function(val,key){ if(BASE_FIELDS.indexOf(key)===-1 && key!=='redirect') addRow(key,val); });
 
   function buildQuery(){
     var parts=[];
@@ -350,6 +390,10 @@
       var k=row.querySelector('.ek').value.trim(), v=row.querySelector('.ev').value.trim();
       if(k) parts.push(encodeURIComponent(k)+'='+encodeURIComponent(v));
     });
+    if(afterMode()==='link'){
+      var rv=$('f-redirect').value.trim();
+      if(rv) parts.push('redirect='+encodeURIComponent(rv));
+    }
     return parts.length ? ('?'+parts.join('&')) : '';
   }
 

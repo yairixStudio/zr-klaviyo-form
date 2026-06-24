@@ -168,6 +168,19 @@
   .status.ok{color:var(--ok)}
   .status.err{color:var(--err)}
 
+  /* clean thank-you screen shown after a successful signup */
+  .thanks{display:none;flex-direction:column;align-items:center;text-align:center;gap:16px;padding:28px 8px 18px}
+  .thanks.show{display:flex}
+  .thanks .mark{
+    width:60px;height:60px;border-radius:50%;border:1.5px solid var(--ok);
+    display:flex;align-items:center;justify-content:center;
+    animation:zr-pop .5s cubic-bezier(.16,.84,.44,1) both;
+  }
+  .thanks .mark svg{width:30px;height:30px;display:block;color:var(--ok)}
+  .thanks h2{font-family:var(--serif);font-weight:600;font-size:24px;line-height:1.2;color:var(--off)}
+  @keyframes zr-pop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+  @media (prefers-reduced-motion: reduce){ .thanks .mark{animation:none} }
+
   .lang-switch{
     display:flex;align-items:center;justify-content:center;gap:8px;
     margin-top:2px;
@@ -264,6 +277,13 @@
       <pre id="debug-json"></pre>
     </details>
   </form>
+
+  <div class="thanks" id="thanks" role="status" aria-live="polite">
+    <span class="mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5 11-12"/></svg>
+    </span>
+    <h2 id="thanks-title"></h2>
+  </div>
   </main>
 
   <div class="lang-switch">
@@ -369,7 +389,7 @@
   // on the URL is treated as a custom property added via the generator.
   var KNOWN_PARAMS = {
     store_id:1, store:1, shop_id:1, location_id:1, city:1, country:1, country_code:1,
-    channel:1, source:1, qr_id:1, qr:1, code:1, lang:1, locale:1, debug:1,
+    channel:1, source:1, qr_id:1, qr:1, code:1, lang:1, locale:1, debug:1, redirect:1,
     utm_source:1, utm_medium:1, utm_campaign:1, utm_term:1, utm_content:1
   };
   function parseParams(){
@@ -384,10 +404,21 @@
       source: qp('source',sp)||'in-store-qr-api-form',
       qr_id: qp('qr_id',sp)||qp('qr',sp)||qp('code',sp),
       lang: qp('lang',sp)||qp('locale',sp),
+      redirect: safeRedirect(qp('redirect',sp)),
       utm_source: qp('utm_source',sp), utm_medium: qp('utm_medium',sp),
       utm_campaign: qp('utm_campaign',sp), utm_term: qp('utm_term',sp), utm_content: qp('utm_content',sp),
       custom: custom
     };
+  }
+
+  // Only allow http(s) absolute URLs as a post-submit redirect target —
+  // blocks javascript:, data:, and other unsafe schemes.
+  function safeRedirect(raw){
+    if(!raw) return '';
+    try{
+      var u = new URL(raw, window.location.href);
+      return (u.protocol==='http:'||u.protocol==='https:') ? u.href : '';
+    }catch(e){ return ''; }
   }
 
   function escapeHtml(s){
@@ -678,6 +709,26 @@
 
   if(!params.country || !params.city) fetchGeo();
 
+  // Swap the form out for the clean thank-you screen.
+  function showThanks(){
+    $('thanks-title').textContent = STR[currentLang].success;
+    $('qr-form').style.display = 'none';
+    var ls = document.querySelector('.lang-switch'); if(ls) ls.style.display = 'none';
+    $('thanks').classList.add('show');
+    postHeight();
+  }
+
+  // After a successful signup: redirect to a configured link if set,
+  // otherwise show the in-page thank-you screen.
+  function finishSuccess(){
+    if(params.redirect){
+      try{ (window.top||window).location.href = params.redirect; }
+      catch(e){ window.location.href = params.redirect; }
+      return;
+    }
+    showThanks();
+  }
+
   $('qr-form').addEventListener('submit', async function(e){
     e.preventDefault();
     setStatus('', null);
@@ -686,7 +737,7 @@
     // anti-spam: honeypot filled, or submitted implausibly fast -> drop silently.
     // Show the normal success message so bots get no signal.
     if($('hp-company').value || (Date.now()-formLoadedAt) < 1500){
-      setStatus(s.success,'ok'); this.reset(); render(); return;
+      this.reset(); showThanks(); return;
     }
 
     if(!this.checkValidity()){ setStatus(s.err_required,'err'); this.reportValidity(); return; }
@@ -700,7 +751,7 @@
     renderDebug(payload,'sending'); $('submit-btn').disabled=true; setStatus(s.sending,null);
     try{
       var result=await submitToKlaviyo(payload);
-      if(result.ok){ setStatus(s.success,'ok'); renderDebug(payload,'success: HTTP '+result.status); this.reset(); render(); }
+      if(result.ok){ renderDebug(payload,'success: HTTP '+result.status); this.reset(); finishSuccess(); }
       else { setStatus(s.err_http,'err'); renderDebug(payload,'failed: HTTP '+result.status); }
     }catch(err){ setStatus(s.err_net,'err'); renderDebug(payload,'failed: network error'); }
     finally{ $('submit-btn').disabled=false; postHeight(); }
